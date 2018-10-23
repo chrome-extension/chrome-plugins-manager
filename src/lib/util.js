@@ -332,6 +332,7 @@ function changeGroup(index) {
       }
     })
     resetHandle()
+    chrome.browserAction.setBadgeText({text: ""})
   }, 50)
 }
 function setGroup() {
