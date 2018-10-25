@@ -149,7 +149,7 @@ function showMenu(item) {
   
       let position = getPositionByExt(item, {
         width: RightMenuWidth,
-        height: 52
+        height: 58
       })
   
       vm.rightMenu = {
