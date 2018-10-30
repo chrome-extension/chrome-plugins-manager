@@ -15,7 +15,7 @@
         <div id="group" class="searchItem" @mouseenter="showGroup" @mouseleave="hideGroup">
           <button class="searchInput btn btn-group">{{group.list[groupIndex].name}}</button>
           <ul id="group-list" v-show="groupShow">
-            <li v-for="(item, index) in group.list" @click="changeGroup(index)" :title="item.name" :key="index">{{item.name}}</li>
+            <li v-for="(item, index) in group.list" v-if="index !== groupIndex" @click="changeGroup(index)" :title="item.name" :key="index">{{item.name}}</li>
             <li @click="setGroup" class="setting"></li>
           </ul>
         </div>
