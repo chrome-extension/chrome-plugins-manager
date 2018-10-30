@@ -77,7 +77,7 @@ export function getExtColor(item) {
     if (substantialColor === 1000) {
       setTimeout(function () {
         item.showIcon = ExtDefaultIcon
-        item.showIconBg = `background-image:url('${ExtDefaultIcon}')`
+        item.showIconBg = `background-image:url('${ExtDefaultIcon}'); background-color:#fff;`
       }, 0)
       newColor = ExtDefaultColor
     }
@@ -143,7 +143,7 @@ function processHandle(all, option) {
           }else{
             item.showIcon = ExtDefaultIcon
           }
-          item.showIconBg = `background-image:url('${item.showIcon}')`
+          item.showIconBg = ""
           item.showColor = ExtDefaultColor
 
           // 判断是否为锁定图标
@@ -166,15 +166,16 @@ function processHandle(all, option) {
         }
       })
       resolve(allExtList)
-      if (option.needColor) {
-        setTimeout(() => {
-          allExtList.forEach(item => {
+      setTimeout(() => {
+        allExtList.forEach(item => {
+          item.showIconBg = `background-image:url('${item.showIcon}'); background-color: #fff;`
+          if (option.needColor) {
             setTimeout(() => {
               getExtColor(item)
-            }, 0)
-          })
-        }, 0)
-      }
+            }, 100)
+          }
+        })
+      }, 0)
     })
   })
   return res
