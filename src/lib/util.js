@@ -313,7 +313,7 @@ let groupTimer = null
 function showGroup() {
   groupTimer = setTimeout(() => {
     vm.groupShow = true
-  }, 100)
+  }, 200)
 }
 function hideGroup() {
   clearTimeout(groupTimer)
