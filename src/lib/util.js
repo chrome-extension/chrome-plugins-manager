@@ -309,10 +309,14 @@ function clear() {
 /**
  * 分组
  */
+let groupTimer = null
 function showGroup() {
-  vm.groupShow = true
+  groupTimer = setTimeout(() => {
+    vm.groupShow = true
+  }, 100)
 }
 function hideGroup() {
+  clearTimeout(groupTimer)
   vm.groupShow = false
 }
 function changeGroup(index) {
