@@ -166,16 +166,14 @@ function processHandle(all, option) {
         }
       })
       resolve(allExtList)
-      setTimeout(() => {
-        allExtList.forEach(item => {
-          item.showIconBg = `background-image:url('${item.showIcon}'); background-color: #fff;`
-          if (option.needColor) {
-            setTimeout(() => {
-              getExtColor(item)
-            }, 100)
-          }
-        })
-      }, 0)
+      allExtList.forEach(item => {
+        item.showIconBg = `background-image:url('${item.showIcon}'); background-color: #fff;`
+        if (option.needColor) {
+          setTimeout(() => {
+            getExtColor(item)
+          }, 100)
+        }
+      })
     })
   })
   return res
