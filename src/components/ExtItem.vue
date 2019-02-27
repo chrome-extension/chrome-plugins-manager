@@ -7,6 +7,7 @@
       :style="item.showIconBg"
       :locked="item.isLocked"
       :searched="item.isSearched"
+      :title="showNativeTitle && item.name"
       @mousedown.left.prevent="extClick(item)"
       @mousedown.right.prevent="extRClick(item)"
       @mouseenter="extEnter(item)"
@@ -25,7 +26,8 @@
       dataList: Array,
       dataId: String,
       dataLocked: String,
-      dataDinginess: Boolean
+      dataDinginess: Boolean,
+      showNativeTitle: Boolean
     },
     methods: {
       extClick(item) {
