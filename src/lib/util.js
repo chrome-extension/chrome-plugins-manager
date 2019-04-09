@@ -88,7 +88,7 @@ function showMenu(item) {
   hideMenu()
   clearTimeout(item['hoverTimer'])
 
-  if(Storage.get("_switch_right_more_") !== 'close'){
+  if(Storage.get('_switch_right_more_') !== 'close'){
     setTimeout(() => {
       hideName()
       // 右键菜单内容
@@ -146,12 +146,12 @@ function showMenu(item) {
           disabled: false
         })
       }
-  
+
       let position = getPositionByExt(item, {
         width: RightMenuWidth,
         height: 58
       })
-  
+
       vm.rightMenu = {
         showClass: position.atLeft ? 'showInfoLeft' : 'showInfoRight',
         left: position.left,
@@ -179,17 +179,17 @@ function hideMenu() {
  */
 function showName(item) {
   hideName()
-  if(Storage.get("_switch_show_extname_") !== 'close'){
+  if(Storage.get('_switch_show_extname_') !== 'close'){
     vm.extName.content = item.shortName
     setTimeout(() => {
       let ele = document.querySelector('#extName')
       item.showMaxWidth = Math.max(RightMenuWidth, ele.offsetWidth)
-  
+
       let position = getPositionByExt(item, {
         width: ele.offsetWidth,
         height: ele.offsetHeight
       })
-      
+
       vm.extName = {
         showClass: position.atLeft ? 'showInfoLeft' : 'showInfoRight',
         left: position.left,
@@ -199,7 +199,7 @@ function showName(item) {
         content: item.name,
         adviseMaxWidth: position.adviseMaxWidth
       }
-    }, 0);
+    }, 0)
   }
 }
 function hideName() {
@@ -217,7 +217,7 @@ function hideName() {
  * 初始化页面所有的操作
  */
 function resetHandle(params) {
-  
+
   // 关闭右键菜单
   hideMenu()
   hideName()
@@ -250,6 +250,7 @@ function enter(item) {
 }
 // 离开
 function leave(item) {
+  // eslint-disable-next-line no-empty
   if (vm.$data.rightMenu.showClass.trim()) {
 
   } else {
@@ -265,7 +266,7 @@ function leave(item) {
  * 搜索功能
  */
 function search() {
-  let text = vm.searcher.text.trim().replace(/\s{2,}/g, " ").toLowerCase()
+  let text = vm.searcher.text.trim().replace(/\s{2,}/g, ' ').toLowerCase()
   if (text) {
     setTimeout(() => {
       vm.searcher.doing = true
@@ -296,7 +297,7 @@ function cancelSearch() {
 function onoff(item) {
   // 防止Hover延迟在点击后生效
   clearTimeout(item['hoverTimer'])
-  
+
   Extension.onoff(item)
   resetHandle()
 }
@@ -336,7 +337,7 @@ function changeGroup(index) {
       }
     })
     resetHandle()
-    chrome.browserAction.setBadgeText({text: ""})
+    chrome.browserAction.setBadgeText({text: ''})
   }, 50)
 }
 function setGroup() {
@@ -360,5 +361,5 @@ export {
   showGroup,
   hideGroup,
   changeGroup,
-  setGroup 
+  setGroup
 }

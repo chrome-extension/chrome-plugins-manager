@@ -1,4 +1,4 @@
-const Promise = require("bluebird")
+const Promise = require('bluebird')
 let storage = null
 
 /**
@@ -30,15 +30,15 @@ function get(key) {
  */
 function remove(key) {
   delete storage[key]
-	chrome.storage.sync.remove(key, function(){})
+  chrome.storage.sync.remove(key, function(){})
 }
 
 /**
  * 增加或修改某个键值对
  */
 function set(key, value) {
-  storage[key] = value;
-	chrome.storage.sync.set(storage, function(){});
+  storage[key] = value
+  chrome.storage.sync.set(storage, function(){})
 }
 
 export { getAll, remove, set, get }

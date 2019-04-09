@@ -1,14 +1,14 @@
-import * as Storage from "./storage";
-const RankKey = "_rankList_"
+import * as Storage from './storage'
+const RankKey = '_rankList_'
 
 // 通过id获取该扩展的rank值
 function get(id, storage) {
   var rankObj = storage[RankKey]
-  var rank = 0;
+  var rank = 0
   if(rankObj && rankObj[id]){
-    rank = parseInt(rankObj[id]);
+    rank = parseInt(rankObj[id])
   }
-  return rank;
+  return rank
 }
 
 // 设置Rank
