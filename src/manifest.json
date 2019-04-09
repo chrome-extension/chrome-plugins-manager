@@ -2,7 +2,7 @@
 	"manifest_version" : 2,
 	"name" : "__MSG_extName__",
 	"short_name": "__MSG_extNameShort__",
-	"version" : "8.11.0",
+	"version" : "8.12.0",
 	"default_locale": "en",
 	"offline_enabled": true,
 	"description" : "__MSG_extDesr__",
@@ -17,10 +17,6 @@
 	"permissions" : ["management", "storage"],
 	"content_security_policy": "script-src 'self' 'unsafe-eval' https://www.googletagmanager.com http://localhost:8080 https://www.google-analytics.com https://ssl.google-analytics.com; object-src 'self'",
 	"options_page" : "option.html",
-	"background": {
-		"page": "popup.html",
-		"persistent": true
-	},
 	"icons": {
 		"16" : "assets/icon/icon_16.png",
 		"32" : "assets/icon/icon_32.png",
