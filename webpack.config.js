@@ -1,5 +1,6 @@
-const UglifyJSPlugin = require('uglifyjs-webpack-plugin')
+// const UglifyJSPlugin = require('uglifyjs-webpack-plugin')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
+const VueLoaderPlugin = require('vue-loader/lib/plugin')
 const webpack = require('webpack')
 const path = require('path')
 const fs = require('fs')
@@ -9,9 +10,11 @@ let definePluginObj = {
 }
 
 module.exports = {
+  mode: process.env.NODE_ENV,
   entry: {
     popup: './src/popup.js',
-    option: './src/option.js'
+    option: './src/option.js',
+    background: './src/background.js'
   },
   output: {
     path: path.resolve(__dirname, './dist'),
@@ -37,8 +40,14 @@ module.exports = {
       },
       {
         test: /\.js$/,
-        loader: 'babel-loader',
-        exclude: /node_modules/
+        exclude: /node_modules/,
+        use: {
+          loader: 'babel-loader',
+          options: {
+            'presets': ['@babel/preset-env'],
+            'plugins': ['@babel/plugin-transform-runtime']
+          }
+        }
       },
       {
         test: /\.(png|jpg|gif|svg)$/,
@@ -65,7 +74,8 @@ module.exports = {
   },
   devtool: '#eval-source-map',
   plugins: [
-    new webpack.DefinePlugin(definePluginObj)
+    new webpack.DefinePlugin(definePluginObj),
+    new VueLoaderPlugin()
   ]
 }
 
@@ -79,9 +89,9 @@ if (process.env.NODE_ENV === 'production') {
         NODE_ENV: '"production"'
       }
     }),
-    new UglifyJSPlugin({
-      sourceMap: false
-    }),
+    // new UglifyJSPlugin({
+    //   sourceMap: false
+    // }),
     new webpack.LoaderOptionsPlugin({
       minimize: true
     }),
@@ -109,6 +119,16 @@ if (process.env.NODE_ENV === 'production') {
       {
         from: path.resolve(__dirname, 'src/option.html'),
         to: path.resolve(__dirname, 'dist/option.html'),
+        ignore: ['.*']
+      },
+      {
+        from: path.resolve(__dirname, 'src/background.js'),
+        to: path.resolve(__dirname, 'dist/background.js'),
+        ignore: ['.*']
+      },
+      {
+        from: path.resolve(__dirname, 'src/background.html'),
+        to: path.resolve(__dirname, 'dist/background.html'),
         ignore: ['.*']
       }
     ])

@@ -41,4 +41,15 @@ function set(key, value) {
   chrome.storage.sync.set(storage, function(){})
 }
 
-export { getAll, remove, set, get }
+
+function init(data) {
+  storage = data
+}
+
+export {
+  getAll,
+  remove,
+  set,
+  get,
+  init
+}

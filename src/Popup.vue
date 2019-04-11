@@ -1,5 +1,5 @@
 <template>
-  <div id="popup" :data-lan="language" :class="'icon-size-' + showIconSize" :style="'width:' + getShowWindowSize + 'px'">
+  <div id="popup" :data-lan="language" :class="'icon-size-' + showIconSize" :style="'width:' + showWindowSize + 'px'">
     <div id="wrap" :searching="searcher.doing" v-if="ext.extList.length > 0">
       <div id="search">
         <div id="searchBox">
@@ -51,10 +51,9 @@
 
 
 <script>
-import getI18n from './lib/i18n'
 import ExtItem from "./components/ExtItem"
-import * as Storage from './lib/storage'
-import * as Extension from "./lib/extension"
+import { init as initStorage } from './lib/storage'
+import { init as initExtension } from "./lib/extension"
 import * as Util from "./lib/util"
 import * as Rank from "./lib/rank"
 
@@ -62,9 +61,9 @@ export default {
   data() {
     return {
       // 国际化对象
-      i18n: getI18n(),
-      chromeStore: `https://chrome.google.com/webstore/category/extensions?hl=${chrome.i18n.getUILanguage()}`,
-      language: chrome.i18n.getUILanguage(),
+      i18n: {},
+      chromeStore: '',
+      language: '',
       ext: {
         extList: [],
         enabledExtListDinginess: false,
@@ -72,7 +71,6 @@ export default {
         iconBadgeAnim: false,
         allEmpty: false
       },
-      allExtColor: {},
       rightMenu: {
         showClass: '',
         left: 0,
@@ -102,7 +100,7 @@ export default {
       groupIndex: 0,
       groupShow: false,
       showIconSize: 2,
-      showWindowSize: 6,
+      showWindowSize: 572,
       orderHandle: function() {}
     }
   },
@@ -140,15 +138,6 @@ export default {
         }
       })
       return list.sort(this.orderHandle)
-    },
-    getShowWindowSize() {
-      const WindowSizeByColum = {
-        6: 496,
-        7: 572,
-        8: 648,
-        9: 724
-      }
-      return WindowSizeByColum[this.showWindowSize] || WindowSizeByColum['7']
     }
   },
   methods: {
@@ -198,53 +187,29 @@ export default {
     }
   },
   beforeCreate() {
-
+    
     // 对象外置，用于调试
     window.vm = this
 
-    Storage.getAll().then(storage => {
+    chrome.runtime.sendMessage({ command: 'getBackgroundData' }, (data) => {
+      let _data = data
 
-      // 显示初始化：图标大小、宽度等
-      let showWindowSize = Storage.get('_showColumn_')
-      if (showWindowSize) {
-        this.showWindowSize = showWindowSize
-      }
-      let showIconSize = Storage.get('_showIconSize_')
-      if (showIconSize) {
-        this.showIconSize = showIconSize
-      }
+      // 初始化前台Storage数据
+      initStorage(_data.storage) && delete _data.storage
 
-      // [Init]增加分组功能，兼容老版本问题
-      let oldLockObj = Storage.get('_lockList_')
-      let group = Storage.get('_group_')
-      if (!group) {
-        group = {
-          list: [
-            {
-              'name': this.i18n.defaultGroupName,
-              'lock': oldLockObj || {}
-            }
-          ]
-        }
-        Storage.set('_group_', group)
-        Storage.remove('_lockList_')
-      }
-      this.group = group
-      this.groupIndex = Number.parseInt(localStorage.getItem("_groupIndex_")) || 0
+      // 初始化扩展数据
+      initExtension(_data.ext.extList)
 
-      // 排序方法初始化
-      this.orderHandle = Extension.orderHandle(storage)
-
-      // 获取所有扩展
-      Extension.getAll({needColor: true}).then(res => {
-        if (res && res.length === 0) {
-          this.ext.allEmpty = true
-        } else {
-          this.ext.extList = res
-        }
-        Extension.addIconBadge()
-      })
-    })
+      this.i18n = _data.i18n
+      this.language = _data.language
+      this.chromeStore = _data.chromeStore
+      this.ext.extList = _data.ext.extList
+      this.ext.allEmpty = _data.ext.allEmpty
+      this.showWindowSize = _data.showWindowSize
+      this.showIconSize = _data.showIconSize
+      this.group = _data.group
+      this.groupIndex = _data.groupIndex
+    });
 
     // 初始化相关
     Util.init(this)

@@ -13,35 +13,35 @@ let allExtList = []
 /**
  * [getColor 获取扩展图标的平均色值，用于扩展名称显示的底色]
  */
-export function getExtColor(item) {
+function getExtColor(item) {
 
-  function getImageColor(img) {
-    var canvas = document.getElementById('getColorByCanvas')
+  let getImageColor = function(img) {
+    let canvas = document.getElementById('getColorByCanvas')
     canvas.width = img.width
     canvas.height = img.height
 
-    var context = canvas.getContext('2d')
+    let context = canvas.getContext('2d')
 
     context.drawImage(img, 0, 0)
 
     // 获取像素数据
-    var data = context.getImageData(0, 0, img.width, img.height).data
+    let data = context.getImageData(0, 0, img.width, img.height).data
 
-    var r = 0
-    var g = 0
-    var b = 0
+    let r = 0
+    let g = 0
+    let b = 0
 
     // 浅色阀值
-    var lightColor = 180
+    let lightColor = 180
 
-    var substantialColor = 1000
+    let substantialColor = 1000
 
     // 取所有像素的平均值
-    for (var row = 0; row < img.height; row++) {
-      for (var col = 0; col < img.width; col++) {
-        var r1 = data[((img.width * row) + col) * 4]
-        var g1 = data[((img.width * row) + col) * 4 + 1]
-        var b1 = data[((img.width * row) + col) * 4 + 2]
+    for (let row = 0; row < img.height; row++) {
+      for (let col = 0; col < img.width; col++) {
+        let r1 = data[((img.width * row) + col) * 4]
+        let g1 = data[((img.width * row) + col) * 4 + 1]
+        let b1 = data[((img.width * row) + col) * 4 + 2]
 
         // 获取图片有效色值位置
         if (!(r1 == 255 && g1 == 255 && b1 == 255)) {
@@ -68,23 +68,15 @@ export function getExtColor(item) {
     g = Math.round(g)
     b = Math.round(b)
 
-    var newColor = 'rgb(' + r + ',' + g + ',' + b + ')'
+    let newColor = 'rgb(' + r + ',' + g + ',' + b + ')'
     if (r > lightColor && g > lightColor && b > lightColor) {
-      newColor = ExtDefaultColor
-    }
-
-    // 判断出是否为白色空图
-    if (substantialColor === 1000) {
-      setTimeout(function () {
-        item.showIcon = ExtDefaultIcon
-        item.showIconBg = `background-image:url('${ExtDefaultIcon}'); background-color:#fff;`
-      }, 0)
       newColor = ExtDefaultColor
     }
 
     return {
       color: newColor,
-      substantial: substantialColor
+      substantial: substantialColor,
+      base64: canvas.toDataURL(),
     }
   }
 
@@ -93,9 +85,15 @@ export function getExtColor(item) {
   img.src = item.showIcon
 
   img.onload = function () {
-    var obj = getImageColor(img)
-    item['showColor'] = obj.color
-    item['showSubstantial'] = obj.substantial
+    let imgData = getImageColor(img)
+    if (imgData.substantial === 1000) {
+      item['showColor'] = ExtDefaultColor
+      item['showIcon'] = ExtDefaultIcon
+      item['showIconBg'] = `background-image:url('${ExtDefaultIcon}'); background-color:#fff;`
+    } else {
+      item['showColor'] = imgData.color
+      item['showIconBg'] = `background-image:url('${imgData.base64}'); background-color:#fff;`
+    }
   }
 }
 
@@ -129,52 +127,44 @@ function orderHandle(storage) {
  */
 function processHandle(all, option) {
   let res = new Promise((resolve, reject) => {
-    Storage.getAll().then(storage => {
 
-      // 区分生产及开发环境
-      let details = chrome.app.getDetails() || {id: ''}
+    // 当前扩展管理器信息
+    let appDetails = chrome.app.getDetails() || { id: '' }
 
-      all.forEach(item => {
-        if (item.id !== details.id && item.type !== 'theme') {
+    all.forEach(item => {
+      if (item.id !== appDetails.id && item.type !== 'theme') {
 
-          // 处理显示图标
-          if (item.icons && item.icons.length > 0) {
-            item.showIcon = item.icons[item.icons.length - 1].url
-          }else{
-            item.showIcon = ExtDefaultIcon
-          }
-          item.showIconBg = ''
-          item.showColor = ExtDefaultColor
-
-          // 判断是否为锁定图标
-          item.isLocked = false
-
-          // 判断是否为应用或开发版本
-          if (item.isApp) {
-            item.showType = 'APP'
-          } else if (item.installType === 'development') {
-            item.showType = 'DEV'
-          }
-
-          // 是否处于hover状态
-          item.isHover = false
-
-          // 是否被搜索关键词命中
-          item.isSearched = false
-
-          allExtList.push(item)
+        // 处理显示图标
+        if (item.icons && item.icons.length > 0) {
+          item.showIcon = item.icons[item.icons.length - 1].url
+        }else{
+          item.showIcon = ExtDefaultIcon
         }
-      })
-      resolve(allExtList)
-      allExtList.forEach(item => {
-        item.showIconBg = `background-image:url('${item.showIcon}'); background-color: #fff;`
-        if (option.needColor) {
-          setTimeout(() => {
-            getExtColor(item)
-          }, 100)
+
+        // 判断是否为锁定图标
+        item.isLocked = false
+
+        // 判断是否为应用或开发版本
+        if (item.isApp) {
+          item.showType = 'APP'
+        } else if (item.installType === 'development') {
+          item.showType = 'DEV'
         }
-      })
+
+        // 是否处于hover状态
+        item.isHover = false
+
+        // 是否被搜索关键词命中
+        item.isSearched = false
+
+        // 处理扩展的图标、平均颜色等
+        getExtColor(item)
+
+        allExtList.push(item)
+      }
     })
+
+    resolve(allExtList)
   })
   return res
 }
@@ -185,29 +175,26 @@ function processHandle(all, option) {
  */
 function addIconBadge(){
   if(Storage.get('_switch_show_badge_') !== 'close'){
-    // ChromeAPI的调用需要处理时间，并且是异步的
-    setTimeout(() => {
-      let badgeList = allExtList.filter(item => {
-        if (item.isLocked !== item.enabled) {
-          return true
-        }
-      })
-
-      if(badgeList.length === 0){
-        // 关闭清理动画
-        if (window.vm) {
-          window.vm.$data.ext.iconBadgeAnim = false
-        }
-        chrome.browserAction.setBadgeText({text: ''})
-      }else{
-        // 显示清理动画
-        if (window.vm) {
-          window.vm.$data.ext.iconBadgeAnim = true
-        }
-        chrome.browserAction.setBadgeBackgroundColor({color: '#f44336'})
-        chrome.browserAction.setBadgeText({text: badgeList.length.toString()})
+    let badgeList = allExtList.filter(item => {
+      if (item.isLocked !== item.enabled) {
+        return true
       }
-    }, 300)
+    })
+
+    if(badgeList.length === 0){
+      // 关闭清理动画
+      if (window.vm) {
+        window.vm.$data.ext.iconBadgeAnim = false
+      }
+      chrome.browserAction.setBadgeText({text: ''})
+    }else{
+      // 显示清理动画
+      if (window.vm) {
+        window.vm.$data.ext.iconBadgeAnim = true
+      }
+      chrome.browserAction.setBadgeBackgroundColor({color: '#f44336'})
+      chrome.browserAction.setBadgeText({text: badgeList.length.toString()})
+    }
   } else {
     chrome.browserAction.setBadgeText({text: ''})
   }
@@ -239,7 +226,6 @@ function onoff(item) {
   item.isHover = false
   // 同步至浏览器
   chrome.management.setEnabled(item.id, item.enabled)
-  addIconBadge()
 }
 
 
@@ -248,7 +234,6 @@ function onoff(item) {
  */
 function lock(item) {
   item.isLocked = true
-  addIconBadge()
 
   let group = Storage.get(LockKey)
   group.list[vm.$data.groupIndex].lock[item.id] = 1
@@ -257,7 +242,6 @@ function lock(item) {
 // 解锁
 function unlock(item) {
   item.isLocked = false
-  addIconBadge()
 
   let group = Storage.get(LockKey)
   delete group.list[vm.$data.groupIndex].lock[item.id]
@@ -274,7 +258,6 @@ function uninstall(item) {
       if (!res) {
         let index = allExtList.indexOf(item)
         allExtList.splice(index, 1)
-        addIconBadge()
       }
     })
   })
@@ -293,6 +276,11 @@ function clear() {
 }
 
 
+function init(data) {
+  allExtList = data
+}
+
+
 export {
   addIconBadge,
   getAll,
@@ -301,5 +289,6 @@ export {
   unlock,
   uninstall,
   clear,
-  orderHandle
+  orderHandle,
+  init
 }
