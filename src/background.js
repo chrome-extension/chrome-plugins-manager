@@ -77,7 +77,7 @@ function init() {
     /**
      * 扩展排序方法初始化
      */
-    let _orderHandleByExtension = Extension.orderHandle(data.storage)
+    // let _orderHandleByExtension = Extension.orderHandle(data.storage)
 
 
     /**
