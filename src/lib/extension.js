@@ -16,7 +16,7 @@ let allExtList = []
 function getExtColor(item) {
 
   let getImageColor = function(img) {
-    let canvas = document.getElementById('getColorByCanvas')
+    let canvas = document.createElement('canvas')
     canvas.width = img.width
     canvas.height = img.height
 

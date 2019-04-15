@@ -15,7 +15,8 @@
 		"default_popup": "popup.html"
 	},
 	"background": {
-		"page": "background.html"
+		"scripts": ["background.js"],
+		"persistent": true
 	},
 	"permissions" : ["management", "storage"],
 	"content_security_policy": "script-src 'self' 'unsafe-eval' https://www.googletagmanager.com http://localhost:8080 https://www.google-analytics.com https://ssl.google-analytics.com; object-src 'self'",
