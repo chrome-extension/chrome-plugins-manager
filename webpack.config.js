@@ -125,11 +125,6 @@ if (process.env.NODE_ENV === 'production') {
         from: path.resolve(__dirname, 'src/background.js'),
         to: path.resolve(__dirname, 'dist/background.js'),
         ignore: ['.*']
-      },
-      {
-        from: path.resolve(__dirname, 'src/background.html'),
-        to: path.resolve(__dirname, 'dist/background.html'),
-        ignore: ['.*']
       }
     ])
   ])
