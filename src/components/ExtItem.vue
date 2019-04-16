@@ -37,7 +37,7 @@
         return function (item) {
           if (this.from === 'option') {
             item['showMark'] = item.isLocked ? 'original' : 'filter'
-            return `background-image:url('${item['showBase64'][item['showMark']]}'); background-color:#fff;`
+            return `background-image:url('${item['showBase64'][item['showMark']]}');`
           } else {
             if (this.searching) {
               item['showMark'] = item.isSearched ? 'original' : 'dinginess'
@@ -48,7 +48,7 @@
                 item['showMark'] = item.enabled ? 'original' : 'filter'
               }
             }
-            return `background-image:url('${item['showBase64'][item['showMark']]}'); background-color:#fff;`
+            return `background-image:url('${item['showBase64'][item['showMark']]}');`
           }
         }
       }
@@ -78,7 +78,7 @@
     list-style: none;
     margin: 13px;
     border-radius: 2px;
-    background-color: #f8f8f8;
+    background-color: #fff;
     background-size: 50px 50px;
     background-position: center;
     background-repeat: no-repeat;
