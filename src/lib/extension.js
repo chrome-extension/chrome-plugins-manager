@@ -245,7 +245,6 @@ function addIconBadge(){
  * 异步操作，支持Promise
  */
 function getAll(option = {}) {
-  console.log('== Extensioin getAll ==')
   let res = new Promise((resolve, reject) => {
     allExtList = []
     chrome.management.getAll(function(obj){
