@@ -1,9 +1,12 @@
+const imagedataFilters = require('imagedata-filters')
 const Promise = require('bluebird')
 const Storage = require('./../lib/storage')
 const Rank = require('./rank')
 
 const LockKey = '_group_'
 const ExtDefaultIcon = './../assets/default-icon.png'
+const ExtDefaultIconFilter = './../assets/default-icon-filter.png'
+const ExtDefaultIconDinginess = './../assets/default-icon-dinginess.png'
 const ExtDefaultColor = '#5c5e6f'
 
 // 储存扩展列表
@@ -24,8 +27,11 @@ function getExtColor(item) {
 
     context.drawImage(img, 0, 0)
 
+    let originalBase64 = canvas.toDataURL()
+
     // 获取像素数据
-    let data = context.getImageData(0, 0, img.width, img.height).data
+    let imageData = context.getImageData(0, 0, img.width, img.height)
+    let data = imageData.data
 
     let r = 0
     let g = 0
@@ -73,10 +79,22 @@ function getExtColor(item) {
       newColor = ExtDefaultColor
     }
 
+    // 普通滤镜 - 1
+    let filterImageData = imagedataFilters.default.grayscale(imageData, {amount: '1'})
+    filterImageData = imagedataFilters.default.opacity(filterImageData, {amount: '.5'})
+    context.putImageData(filterImageData, 0, 0)
+    let filterBase64 = canvas.toDataURL()
+    // Dinginess滤镜 - 2
+    filterImageData = imagedataFilters.default.opacity(filterImageData, {amount: '.2'})
+    context.putImageData(filterImageData, 0, 0)
+    let dinginessBase64 = canvas.toDataURL()
+
     return {
       color: newColor,
       substantial: substantialColor,
-      base64: canvas.toDataURL(),
+      originalBase64,
+      filterBase64,
+      dinginessBase64
     }
   }
 
@@ -87,12 +105,30 @@ function getExtColor(item) {
   img.onload = function () {
     let imgData = getImageColor(img)
     if (imgData.substantial === 1000) {
-      item['showColor'] = ExtDefaultColor
       item['showIcon'] = ExtDefaultIcon
-      item['showIconBg'] = `background-image:url('${ExtDefaultIcon}'); background-color:#fff;`
+      item['showBase64'] = {
+        'original': ExtDefaultIcon,
+        'filter': ExtDefaultIconFilter,
+        'dinginess': ExtDefaultIconDinginess
+      }
+      item['showColor'] = {
+        'original': ExtDefaultColor,
+        'filter': ExtDefaultColor,
+        'dinginess': ExtDefaultColor
+      }
+      item['showMark'] = 'original'
     } else {
-      item['showColor'] = imgData.color
-      item['showIconBg'] = `background-image:url('${imgData.base64}'); background-color:#fff;`
+      item['showBase64'] = {
+        'original': imgData.originalBase64,
+        'filter': imgData.filterBase64,
+        'dinginess': imgData.dinginessBase64
+      }
+      item['showColor'] = {
+        'original': imgData.color,
+        'filter': '#b1b1b1',
+        'dinginess': '#ebebeb'
+      }
+      item['showMark'] = 'original'
     }
   }
 }
@@ -187,6 +223,7 @@ function addIconBadge(){
         window.vm.$data.ext.iconBadgeAnim = false
       }
       chrome.browserAction.setBadgeText({text: ''})
+      return false
     }else{
       // 显示清理动画
       if (window.vm) {
@@ -194,9 +231,11 @@ function addIconBadge(){
       }
       chrome.browserAction.setBadgeBackgroundColor({color: '#f44336'})
       chrome.browserAction.setBadgeText({text: badgeList.length.toString()})
+      return true
     }
   } else {
     chrome.browserAction.setBadgeText({text: ''})
+    return false
   }
 }
 

@@ -1,5 +1,5 @@
 import getI18n from './lib/i18n'
-import * as Extension from './lib/extension'
+import { getAll as getAllExtension, addIconBadge as addIconBadgeExtension } from './lib/extension'
 import * as Storage from './lib/storage'
 
 // 窗口大小尺寸
@@ -11,7 +11,7 @@ const _WindowSizeByColum = {
 }
 
 // 实时运行数据
-let data = {
+window.data = {
   i18n: getI18n(),
   language: chrome.i18n.getUILanguage(),
   chromeStore: `https://chrome.google.com/webstore/category/extensions?hl=${chrome.i18n.getUILanguage()}`,
@@ -21,6 +21,7 @@ let data = {
     enbledExtList: [],
     disabledExtList: [],
     allEmpty: false,
+    iconBadgeAnim: false
   }
 }
 
@@ -44,14 +45,9 @@ function init() {
     /**
      * 界面显示初始化：图标大小、宽度等
      */
-    let _showColumn = Storage.get('_showColumn_')
-    if (_showColumn) {
-      data.showWindowSize = _WindowSizeByColum[_showColumn]
-    }
-    let _showIconSize = Storage.get('_showIconSize_')
-    if (_showIconSize) {
-      data.showIconSize = _showIconSize
-    }
+    let _showColumn = Storage.get('_showColumn_') || 7
+    data.showWindowSize = _WindowSizeByColum[_showColumn]
+    data.showIconSize = Storage.get('_showIconSize_') || 2
 
     /**
      * 分组处理
@@ -62,7 +58,7 @@ function init() {
       _group = {
         list: [
           {
-            'name': this.i18n.defaultGroupName,
+            'name': data.i18n.defaultGroupName,
             'lock': _oldLockObj || {}
           }
         ]
@@ -83,31 +79,29 @@ function init() {
     /**
      * 扩展数据处理
      */
-    data.ext.extList = await Extension.getAll({ needColor: true })
+    data.ext.extList = await getAllExtension({ needColor: true })
     if (data.ext.extList && data.ext.extList.length === 0) {
       data.ext.allEmpty = true
     } else {
       // 启用&禁用，排序处理
-      data.ext.extList.forEach(item => {
-        if (data.group.list[data.groupIndex].lock[item.id]) {
-          item.isLocked = true
-        } else {
-          item.isLocked = false
-        }
+      // data.ext.extList.forEach(item => {
+        // if (data.group.list[data.groupIndex].lock[item.id]) {
+        //   item.isLocked = true
+        // } else {
+        //   item.isLocked = false
+        // }
         // if (item.enabled) {
         //   data.ext.enbledExtList.push(item)
         // } else {
         //   data.ext.disabledExtList.push(item)
         // }
-      })
+      // })
       // data.ext.enbledExtList = data.ext.enbledExtList.sort(_orderHandleByExtension)
       // data.ext.disabledExtList = data.ext.disabledExtList.sort(_orderHandleByExtension)
     }
 
     // 判断角标显示
-    Extension.addIconBadge()
-
-    console.log('== Background 初始化数据 ==', data)
+    data.ext.iconBadgeAnim = addIconBadgeExtension()
   }, 300)
 }
 init()
@@ -117,7 +111,6 @@ init()
  * 数据传输监听
  */
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-  // sender.tab.url.indexOf(`chrome-extension://${chrome.app.getDetails().id}/`) === 0
   if (request.command == 'getBackgroundData'){
     sendResponse(data)
   }

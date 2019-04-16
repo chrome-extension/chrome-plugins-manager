@@ -1,19 +1,20 @@
 <template>
-  <ul :id="dataId" :class="{ gclearfix: true, 'ext-list': true, dinginess: dataDinginess }" :locked="dataLocked">
+  <ul :id="dataId" :class="{ gclearfix: true, 'ext-list': true}" :locked="dataLocked">
     <li 
       v-for="item in dataList"
       :data-id="item.id"
       :class="{ hover: item.isHover}"
-      :style="item.showIconBg"
+      :style="getStyle(item)"
       :locked="item.isLocked"
       :searched="item.isSearched"
       :title="showNativeTitle && item.name"
+      :mark="item.showMark"
       @mousedown.left.prevent="extClick(item)"
       @mousedown.right.prevent="extRClick(item)"
       @mouseenter="extEnter(item)"
       @mouseleave="extLeave(item)"
       >
-      <i v-if="item.showType" :style="'background-color: ' + item.showColor">{{item.showType}}</i>
+      <i v-if="item.showType" :style="'background-color: ' + item.showColor[item.showMark]">{{item.showType}}</i>
     </li>
     <slot name="empty"></slot>
   </ul>
@@ -26,8 +27,25 @@
       dataList: Array,
       dataId: String,
       dataLocked: String,
-      dataDinginess: Boolean,
-      showNativeTitle: Boolean
+      showNativeTitle: Boolean,
+      searching: Boolean,
+      hover: Object
+    },
+    computed: {
+      getStyle: function(){
+        return function (item) {
+          if (this.searching) {
+            item['showMark'] = item.isSearched ? 'original' : 'dinginess'
+          } else {
+            if (this.hover.doing && this.dataId === this.hover.listName) {
+                item['showMark'] = item.isHover ? 'original' : 'dinginess'
+            } else {
+              item['showMark'] = item.enabled ? 'original' : 'filter'
+            }
+          }
+          return `background-image:url('${item['showBase64'][item['showMark']]}'); background-color:#fff;`
+        }
+      }
     },
     methods: {
       extClick(item) {
@@ -47,9 +65,6 @@
 </script>
 
 <style>
-  .ext-list{
-    will-change: contents;
-  }
   .ext-list li {
     width: 50px;
     height: 50px;
@@ -66,13 +81,10 @@
     -webkit-transition: .2s ease-in-out;
     transition: .2s ease-in-out;
 
-    -webkit-transform: translateZ(0);
-    transform: translateZ(0);
+    /* -webkit-transform: translateZ(0);
+    transform: translateZ(0); */
   }
   .ext-list li.hover {
-    -webkit-filter: grayscale(0) !important;
-    filter: grayscale(0) !important;
-    opacity: 1 !important;
     transform: scale(1.3);
     -webkit-transform: scale(1.3);
   }
@@ -96,14 +108,15 @@
     border-radius: 10px;
     box-shadow: 0px 0px 0px 1px #fff;
     background: #5c5d6e;
-    -webkit-transform: scale(0.7);transform: scale(0.7);
+    -webkit-transform: scale(0.7);
+    transform: scale(0.7);
   }
 
   .ext-list li[locked]::after {
     position: absolute;
     top: 1px;
     right: 1px;
-    z-index: 999;
+    z-index: 88;
     content: "";
     display: block;
     height: 6px;
@@ -123,6 +136,14 @@
     -webkit-animation-direction: alternate;
     animation-iteration-count: 2;
     -webkit-animation-iteration-count: 2;
+  }
+  .ext-list li[locked][mark=filter]::after {
+    border-color: #aeaeae;
+    background: #dbdbdb;
+  }
+  .ext-list li[locked][mark=dinginess]::after {
+    border-color: #dfdfdf;
+    background: #f1f1f1;
   }
   @keyframes lockedAnim {
     0%{

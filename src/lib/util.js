@@ -157,7 +157,7 @@ function showMenu(item) {
         left: position.left,
         right: position.right,
         top: position.top,
-        backgroundColor: item.showColor,
+        backgroundColor: item.showColor[item.showMark],
         content
       }
     }, 0)
@@ -195,7 +195,7 @@ function showName(item) {
         left: position.left,
         right: position.right,
         top: position.top,
-        backgroundColor: item.showColor,
+        backgroundColor: item.showColor[item.showMark],
         content: item.name,
         adviseMaxWidth: position.adviseMaxWidth
       }
@@ -227,8 +227,10 @@ function resetHandle(params) {
     item.isHover = false
     clearTimeout(item['hoverTimer'])
   })
-  vm.$data.ext.enabledExtListDinginess = false
-  vm.$data.ext.disabledExtListDinginess = false
+  vm.$data.hover = {
+    doing: false,
+    listName: ''
+  }
 }
 
 
@@ -243,7 +245,10 @@ function enter(item) {
     resetHandle()
     item['hoverTimer'] = setTimeout(() => {
       item.isHover = true
-      vm.$data.ext[item.enabled ? 'enabledExtListDinginess' : 'disabledExtListDinginess'] = true
+      vm.$data.hover = {
+        doing: true,
+        listName: item.enabled ? 'showList' : 'hideList'
+      }
       showName(item)
     }, 200)
   }

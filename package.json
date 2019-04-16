@@ -33,6 +33,7 @@
     "webpack-dev-server": "^3.3.1"
   },
   "dependencies": {
+    "imagedata-filters": "^1.0.1",
     "vue": "^2.6.10"
   }
 }
