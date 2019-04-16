@@ -1,14 +1,7 @@
 import getI18n from './lib/i18n'
 import { getAll as getAllExtension, addIconBadge as addIconBadgeExtension } from './lib/extension'
+import * as Common from './lib/common'
 import * as Storage from './lib/storage'
-
-// 窗口大小尺寸
-const _WindowSizeByColum = {
-  6: 496,
-  7: 572,
-  8: 648,
-  9: 724
-}
 
 // 实时运行数据
 window.data = {
@@ -45,9 +38,9 @@ function init() {
     /**
      * 界面显示初始化：图标大小、宽度等
      */
-    let _showColumn = Storage.get('_showColumn_') || 7
-    data.showWindowSize = _WindowSizeByColum[_showColumn]
-    data.showIconSize = Storage.get('_showIconSize_') || 2
+    data.showWindowSize = Common.WindowSizeByColum[Storage.get('_showColumn_') || Common.WindowSizeDefaultColum]
+    data.showIconSize = Storage.get('_showIconSize_') || Common.ShowIconSize
+    data.sortType = Storage.get('_radio_ext_sort_') || Common.SortDefaultType
 
     /**
      * 分组处理

@@ -40,7 +40,7 @@
           <svg viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><path d="M939.939489 459.072557 562.339502 459.072557 562.339502 83.519182 462.055494 83.519182 462.055494 459.072557 84.455507 459.072557 84.455507 559.356564 462.055494 559.356564 462.055494 939.003164 562.339502 939.003164 562.339502 559.356564 939.939489 559.356564Z" fill="#636363"></path></svg>
         </li>
       </ul>
-      <ext-item :data-list="getAllExtList" :showNativeTitle="true">
+      <ext-item :data-list="getAllExtList" :showNativeTitle="true" from="option">
         <template slot="empty">
           <li class="empty" v-if="getAllExtList.length === 0">{{i18n.emptyShowListCon}}</li>
         </template>
@@ -119,6 +119,7 @@
 import getI18n from "./lib/i18n";
 import ExtItem from "./components/ExtItem";
 import SwitchBtn from "./components/SwitchBtn";
+import * as Common from './lib/common.js'
 import * as Storage from "./lib/storage";
 import * as Extension from "./lib/extension";
 
@@ -127,6 +128,7 @@ export default {
     return {
       // 国际化对象
       i18n: getI18n(),
+      language: '',
       extList: [],
       group: {
         list: [
@@ -137,8 +139,8 @@ export default {
         ]
       },
       groupIndex: 0,
-      showIconSize: 2,
-      showWindowSize: 7,
+      showIconSize: Common.ShowIconSize,
+      showWindowSize: Common.WindowSizeDefaultColum,
       tips: {
         show: false,
         content: ""
@@ -160,7 +162,7 @@ export default {
   },
   computed: {
     otherDesc() {
-      return this.i18n.otherDesc.replace('<a>', `<a href="https://chrome.google.com/webstore/detail/extension-manager/gjldcdngmdknpinoemndlidpcabkggco/reviews?hl=${chrome.i18n.getUILanguage()}" target="_blank">`)
+      return this.i18n.otherDesc.replace('<a>', `<a href="https://chrome.google.com/webstore/detail/extension-manager/gjldcdngmdknpinoemndlidpcabkggco/reviews?hl=${this.language}" target="_blank">`)
     },
     getAllExtList() {
       return this.extList.map(item => {
@@ -173,14 +175,8 @@ export default {
       })
     },
     getShowWindowSize() {
-      const WindowSizeByColum = {
-        6: 496,
-        7: 572,
-        8: 648,
-        9: 724
-      }
-      // 默认情况下是6列
-      return WindowSizeByColum[this.showWindowSize] || WindowSizeByColum["6"]
+      // 默认情况下是7列
+      return Common.WindowSizeByColum[this.showWindowSize || Common.WindowSizeDefaultColum]
     },
     getShowIconSize() {
       const IconSizeShowText = {
@@ -300,45 +296,28 @@ export default {
 
     window.vm = this
 
-    Promise.all([Storage.getAll(), Extension.getAll({needColor: true})]).then((res) => {
-      let storage = res[0]
+    chrome.runtime.sendMessage({ command: 'getBackgroundData' }, (data) => {
+      let _data = data
+
+      // 初始化前台Storage数据
+      Storage.init(_data.storage)
+
+      // 初始化扩展数据
+      Extension.init(_data.ext.extList)
 
       // 初始化排序数据
-      if (Storage.get('_radio_ext_sort_') === "rank") {
-        this.sortType = "rank"
-      }
+      this.sortType = _data.sortType
 
-      // 初始化扩展显示列数
-      let columSize = Storage.get('_showColumn_')
-      if (columSize) {
-        this.showWindowSize = columSize
-      }
+      this.i18n = _data.i18n
+      this.language = _data.language
+      
+      this.extList = _data.ext.extList
+      
+      this.showWindowSize = _data.showWindowSize
+      this.showIconSize = _data.showIconSize
 
-      // 初始化扩展图标显示大小
-      let extIconSize = Storage.get('_showIconSize_')
-      if (extIconSize) {
-        this.showIconSize = extIconSize
-      }
-
-      // [Init]增加分组功能，兼容老版本问题
-      let oldLockObj = Storage.get('_lockList_')
-      let group = Storage.get('_group_')
-      if (!group) {
-        group = {
-          list: [
-            {
-              'name': this.i18n.defaultGroupName,
-              'lock': oldLockObj || {}
-            }
-          ]
-        }
-        Storage.remove('_lockList_')
-      }
-      this.group = group
-      this.groupIndex = Number.parseInt(localStorage.getItem("_groupIndex_")) || 0
-
-      this.extList = res[1]
-
+      this.group = _data.group
+      this.groupIndex = _data.groupIndex
     })
   }
 }
@@ -417,11 +396,6 @@ select:hover {
 }
 .list .list-plugins li[locked] {
   position: relative;
-}
-.list .list-plugins li[locked] img {
-  opacity: 0.3;
-  -webkit-filter: grayscale(1);
-  filter: grayscale(1);
 }
 .list .list-plugins li[locked]:after {
   position: absolute;
@@ -572,11 +546,6 @@ ul li em {
   border: 1px solid #ccc;
   border-radius: 2px;
   padding: 10px;
-}
-.ext-list li:not([locked]){
-  opacity: .4 !important;
-  -webkit-filter: grayscale(1);
-  filter: grayscale(1);
 }
 .ext-list li.empty{
   width: 100%;

@@ -29,21 +29,27 @@
       dataLocked: String,
       showNativeTitle: Boolean,
       searching: Boolean,
-      hover: Object
+      hover: Object,
+      from: String
     },
     computed: {
       getStyle: function(){
         return function (item) {
-          if (this.searching) {
-            item['showMark'] = item.isSearched ? 'original' : 'dinginess'
+          if (this.from === 'option') {
+            item['showMark'] = item.isLocked ? 'original' : 'filter'
+            return `background-image:url('${item['showBase64'][item['showMark']]}'); background-color:#fff;`
           } else {
-            if (this.hover.doing && this.dataId === this.hover.listName) {
-                item['showMark'] = item.isHover ? 'original' : 'dinginess'
+            if (this.searching) {
+              item['showMark'] = item.isSearched ? 'original' : 'dinginess'
             } else {
-              item['showMark'] = item.enabled ? 'original' : 'filter'
+              if (this.hover && this.hover.doing && this.dataId === this.hover.listName) {
+                  item['showMark'] = item.isHover ? 'original' : 'dinginess'
+              } else {
+                item['showMark'] = item.enabled ? 'original' : 'filter'
+              }
             }
+            return `background-image:url('${item['showBase64'][item['showMark']]}'); background-color:#fff;`
           }
-          return `background-image:url('${item['showBase64'][item['showMark']]}'); background-color:#fff;`
         }
       }
     },
