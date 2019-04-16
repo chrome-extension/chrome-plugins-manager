@@ -6,14 +6,10 @@ let storage = null
  */
 function getAll() {
   let res = new Promise((resolve, reject) => {
-    if (storage) {
+    chrome.storage.sync.get(function(obj) {
+      storage = obj
       resolve(storage)
-    } else {
-      chrome.storage.sync.get(function(obj) {
-        storage = obj
-        resolve(storage)
-      })
-    }
+    })
   })
   return res
 }

@@ -313,7 +313,7 @@ export default {
       
       this.extList = _data.ext.extList
       
-      this.showWindowSize = _data.showWindowSize
+      this.showWindowSize = Storage.get('_showColumn_') || Common.WindowSizeDefaultColum
       this.showIconSize = _data.showIconSize
 
       this.group = _data.group

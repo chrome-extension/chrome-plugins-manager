@@ -13,15 +13,13 @@ function get(id, storage) {
 
 // 设置Rank
 function set(id) {
-  Storage.getAll().then(storage => {
-    var rankObj = Storage.get(RankKey) || {}
-    if (rankObj[id]) {
-      rankObj[id] = parseInt(rankObj[id]) + 1
-    } else {
-      rankObj[id] = 1
-    }
-    Storage.set(RankKey, rankObj)
-  })
+  var rankObj = Storage.get(RankKey) || {}
+  if (rankObj[id]) {
+    rankObj[id] = parseInt(rankObj[id]) + 1
+  } else {
+    rankObj[id] = 1
+  }
+  Storage.set(RankKey, rankObj)
 }
 
 export  { get, set }

@@ -27,11 +27,9 @@
     },
     beforeMount() {
       this.swtichKey = `_switch_${this.dataKey}_`
-      Storage.getAll().then(storage => {
-        if (Storage.get(this.swtichKey) === 'close') {
-          this.closeClass = true
-        }
-      })
+      if (Storage.get(this.swtichKey) === 'close') {
+        this.closeClass = true
+      }
     }
   }
 </script>

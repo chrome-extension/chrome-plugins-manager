@@ -77,18 +77,18 @@ function init() {
       data.ext.allEmpty = true
     } else {
       // 启用&禁用，排序处理
-      // data.ext.extList.forEach(item => {
-        // if (data.group.list[data.groupIndex].lock[item.id]) {
-        //   item.isLocked = true
-        // } else {
-        //   item.isLocked = false
-        // }
+      data.ext.extList.forEach(item => {
+        if (data.group.list[data.groupIndex].lock[item.id]) {
+          item.isLocked = true
+        } else {
+          item.isLocked = false
+        }
         // if (item.enabled) {
         //   data.ext.enbledExtList.push(item)
         // } else {
         //   data.ext.disabledExtList.push(item)
         // }
-      // })
+      })
       // data.ext.enbledExtList = data.ext.enbledExtList.sort(_orderHandleByExtension)
       // data.ext.disabledExtList = data.ext.disabledExtList.sort(_orderHandleByExtension)
     }
