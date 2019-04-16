@@ -26,10 +26,17 @@
       }
     },
     beforeMount() {
-      this.swtichKey = `_switch_${this.dataKey}_`
-      if (Storage.get(this.swtichKey) === 'close') {
-        this.closeClass = true
-      }
+      chrome.runtime.sendMessage({ command: 'getBackgroundData' }, (data) => {
+        let _data = data
+
+        // 初始化前台Storage数据
+        Storage.init(_data.storage)
+
+        this.swtichKey = `_switch_${this.dataKey}_`
+        if (Storage.get(this.swtichKey) === 'close') {
+          this.closeClass = true
+        }
+      })
     }
   }
 </script>

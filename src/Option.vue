@@ -291,9 +291,6 @@ export default {
 
   // 初始化
   beforeMount() {
-    // 设置标题
-    document.title = `${this.i18n["optionName"]} - ${this.i18n["extName"]}`;
-
     window.vm = this
 
     chrome.runtime.sendMessage({ command: 'getBackgroundData' }, (data) => {
@@ -318,6 +315,9 @@ export default {
 
       this.group = _data.group
       this.groupIndex = _data.groupIndex
+
+      // 设置标题
+      document.title = `${this.i18n["optionName"]} - ${this.i18n["extName"]}`;
     })
   }
 }
