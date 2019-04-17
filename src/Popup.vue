@@ -37,9 +37,6 @@
       </span>
     </div>
 
-    <!-- <label id="extName" :class="[extName.showClass]" :style="{ left: extName.left, right: extName.right, top: extName.top, background: extName.backgroundColor, 'max-width': extName.adviseMaxWidth + 'px'}">
-      {{extName.content}}
-    </label> -->
     <div id="rightMenu" :class="[rightMenu.showClass]" :style="{ left: rightMenu.left, right: rightMenu.right, top: rightMenu.top}">
       <div class="name" :style="{ background: rightMenu.backgroundColor }">
         {{rightMenu.name}}
@@ -81,15 +78,6 @@ export default {
         top: 0,
         backgroundColor: '#000',
         content: []
-      },
-      extName: {
-        showClass: '',
-        left: 0,
-        right: 'unset',
-        top: 0,
-        backgroundColor: '#000',
-        content: '',
-        adviseMaxWidth: 200
       },
       searcher: {
         doing: false,
@@ -602,30 +590,6 @@ export default {
     outline: none;
   }
 
-  #extName{
-    position: absolute;
-    top: 0;
-    left: 0;
-    z-index: 6;
-
-    box-sizing: border-box;
-    height: 26px;
-    line-height: 26px;
-    font-size: 14px;
-    color: #fff;
-    text-transform: capitalize;
-    white-space: nowrap;
-
-    padding: 0 10px;
-    border: none;
-    border-radius: 4px;
-    background-color: #5c5e6f;
-    opacity: 0;
-
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-
   #rightMenu{
     display: none;
 
@@ -642,8 +606,8 @@ export default {
     opacity: 0;
     background-color: #efefef;
 
-    -webkit-transition: .2s ease-in-out;
-    transition: .2 ease-in-out;
+    /* -webkit-transition: .2s ease-in-out;
+    transition: .2 ease-in-out; */
   }
   [data-lan=ru] #rightMenu{
     width: 210px;
