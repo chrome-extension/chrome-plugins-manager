@@ -1,4 +1,3 @@
-// const UglifyJSPlugin = require('uglifyjs-webpack-plugin')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
 const VueLoaderPlugin = require('vue-loader/lib/plugin')
 const webpack = require('webpack')
@@ -89,9 +88,6 @@ if (process.env.NODE_ENV === 'production') {
         NODE_ENV: '"production"'
       }
     }),
-    // new UglifyJSPlugin({
-    //   sourceMap: false
-    // }),
     new webpack.LoaderOptionsPlugin({
       minimize: true
     }),
