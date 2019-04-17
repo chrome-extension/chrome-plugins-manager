@@ -43,7 +43,7 @@
       </div>
       <ul>
         <li v-for="(item, index) in rightMenu.content" @click="item.handle" :disabled="item.disabled" :key="index" :style="{ background: rightMenu.backgroundColor }">
-          <span>{{item.name}}</span>
+          {{item.name}}
         </li>
       </ul>
     </div>
