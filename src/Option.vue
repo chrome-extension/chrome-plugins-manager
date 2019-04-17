@@ -40,7 +40,7 @@
           <svg viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><path d="M939.939489 459.072557 562.339502 459.072557 562.339502 83.519182 462.055494 83.519182 462.055494 459.072557 84.455507 459.072557 84.455507 559.356564 462.055494 559.356564 462.055494 939.003164 562.339502 939.003164 562.339502 559.356564 939.939489 559.356564Z" fill="#636363"></path></svg>
         </li>
       </ul>
-      <ext-item :data-list="getAllExtList" :showNativeTitle="true" from="option">
+      <ext-item :data-list="getAllExtList" from="option">
         <template slot="empty">
           <li class="empty" v-if="getAllExtList.length === 0">{{i18n.emptyShowListCon}}</li>
         </template>

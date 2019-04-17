@@ -7,7 +7,6 @@
       :style="getStyle(item)"
       :locked="item.isLocked"
       :searched="item.isSearched"
-      :title="showNativeTitle && item.name"
       :mark="item.showMark"
       @mousedown.left.prevent="extClick(item)"
       @mouseenter="extEnter(item)"
@@ -26,7 +25,6 @@
       dataList: Array,
       dataId: String,
       dataLocked: String,
-      showNativeTitle: Boolean,
       searching: Boolean,
       hover: Object,
       from: String
