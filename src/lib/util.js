@@ -88,94 +88,92 @@ function showMenu(item) {
   hideMenu()
   clearTimeout(item['hoverTimer'])
 
-  if(Storage.get('_switch_right_more_') !== 'close'){
-    setTimeout(() => {
-      // 右键菜单内容
-      let content = [{
-        name: item.isLocked ? vm.i18n.rightLock_unlock : vm.i18n.rightLock_lock,
-        handle: () => {
-          hideMenu()
-          if (item.isLocked) {
-            Extension.unlock(item)
-          } else {
-            Extension.lock(item)
-          }
-        },
-        disabled: false
+  setTimeout(() => {
+    // 右键菜单内容
+    let content = [{
+      name: item.isLocked ? vm.i18n.rightLock_unlock : vm.i18n.rightLock_lock,
+      handle: () => {
+        hideMenu()
+        if (item.isLocked) {
+          Extension.unlock(item)
+        } else {
+          Extension.lock(item)
+        }
       },
-      {
-        name: vm.i18n.rightOption,
-        handle: () => {
-          hideMenu()
-          if (item.optionsUrl) {
-            if (!item.enabled) {
-              Extension.onoff(item, () => {
-                chrome.tabs.create({
-                  'url': item.optionsUrl
-                })
-              })
-            } else {
+      disabled: false
+    },
+    {
+      name: vm.i18n.rightOption,
+      handle: () => {
+        hideMenu()
+        if (item.optionsUrl) {
+          if (!item.enabled) {
+            Extension.onoff(item, () => {
               chrome.tabs.create({
                 'url': item.optionsUrl
               })
-            }
-          }
-        },
-        disabled: !item.optionsUrl
-      },
-      {
-        name: vm.i18n.rightUninstall,
-        handle: () => {
-          hideMenu()
-          Extension.uninstall(item)
-        },
-        disabled: false
-      },
-      {
-        name: vm.i18n.rightHomepage,
-        handle: () => {
-          hideMenu()
-          if (item.installType !== 'development') {
+            })
+          } else {
             chrome.tabs.create({
-              'url': item.homepageUrl
+              'url': item.optionsUrl
             })
           }
-        },
-        disabled: item.installType === 'development'
-      }]
-      if (item.isApp) {
-        content.splice(1, 1, {
-          name: vm.i18n.rightAppLaunch,
-          handle: () => {
-            hideMenu()
-            if (!item.enabled) {
-              Extension.onoff(item, () => {
-                chrome.management.launchApp(item.id)
-              })
-            } else {
+        }
+      },
+      disabled: !item.optionsUrl
+    },
+    {
+      name: vm.i18n.rightUninstall,
+      handle: () => {
+        hideMenu()
+        Extension.uninstall(item)
+      },
+      disabled: false
+    },
+    {
+      name: vm.i18n.rightHomepage,
+      handle: () => {
+        hideMenu()
+        if (item.installType !== 'development') {
+          chrome.tabs.create({
+            'url': item.homepageUrl
+          })
+        }
+      },
+      disabled: item.installType === 'development'
+    }]
+    if (item.isApp) {
+      content.splice(1, 1, {
+        name: vm.i18n.rightAppLaunch,
+        handle: () => {
+          hideMenu()
+          if (!item.enabled) {
+            Extension.onoff(item, () => {
               chrome.management.launchApp(item.id)
-            }
-          },
-          disabled: false
-        })
-      }
-
-      let position = getPositionByExt(item, {
-        width: RightMenuWidth,
-        height: 84
+            })
+          } else {
+            chrome.management.launchApp(item.id)
+          }
+        },
+        disabled: false
       })
+    }
 
-      vm.rightMenu = {
-        name: item.shortName,
-        showClass: position.atLeft ? 'showInfoLeft' : 'showInfoRight',
-        left: position.left,
-        right: position.right,
-        top: position.top,
-        backgroundColor: item.showColor[item.showMark],
-        content
-      }
-    }, 0)
-  }
+    let position = getPositionByExt(item, {
+      width: RightMenuWidth,
+      height: 84
+    })
+
+    vm.rightMenu = {
+      name: item.shortName,
+      showClass: position.atLeft ? 'showInfoLeft' : 'showInfoRight',
+      left: position.left,
+      right: position.right,
+      top: position.top,
+      backgroundColor: item.showColor[item.showMark],
+      content
+    }
+  }, 0)
 }
 
 

@@ -69,13 +69,6 @@
       </ul>
     </div>
 
-    <!-- 是否开启右键 -->
-    <div class="list">
-      <h1>{{i18n.rightMoreName}}</h1>
-      <switch-btn data-key="right_more"></switch-btn>
-      <p class="describe">{{i18n.rightMoreDesc}}</p>
-    </div>
-    
     <!-- 是否显示角标 -->
     <div class="list">
       <h1>{{i18n.showBadgeName}}</h1>
@@ -83,13 +76,6 @@
       <p class="describe">{{i18n.showBadgeDesc}}</p>
     </div>
     
-    <!-- 是否显示扩展名称 -->
-    <div class="list">
-      <h1>{{i18n.showExtName}}</h1>
-      <switch-btn data-key="show_extname"></switch-btn>
-      <p class="describe">{{i18n.showExtNameDesc}}</p>
-    </div>
-
     <!-- 捐赠 -->
     <div class="list">
       <h1>{{i18n.otherName}}</h1>
@@ -155,9 +141,6 @@ export default {
   watch: {
     'group.list': function(val, oldVal){
       Storage.set('_group_', this.group)
-    },
-    groupIndex: (val, oldVal) => {
-      localStorage.setItem("_groupIndex_", val)
     }
   },
   computed: {
