@@ -126,7 +126,7 @@ function getExtColor(item) {
       item['showColor'] = {
         'original': imgData.color,
         'filter': '#b1b1b1',
-        'dinginess': '#ebebeb'
+        'dinginess': '#f3f3f3'
       }
       item['showMark'] = 'original'
     }
