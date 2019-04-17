@@ -2,7 +2,7 @@ import * as Extension from './extension'
 import * as Storage from './storage'
 
 // 右键菜单宽度
-const RightMenuWidth = chrome.i18n.getUILanguage() === 'ru' ? 210 : 150
+const RightMenuWidth = chrome.i18n.getUILanguage() === 'ru' ? 210 : 190
 
 // popup页面vue对象
 let vm = null
@@ -90,7 +90,6 @@ function showMenu(item) {
 
   if(Storage.get('_switch_right_more_') !== 'close'){
     setTimeout(() => {
-      hideName()
       // 右键菜单内容
       let content = [{
         name: item.isLocked ? vm.i18n.rightLock_unlock : vm.i18n.rightLock_lock,
@@ -149,10 +148,11 @@ function showMenu(item) {
 
       let position = getPositionByExt(item, {
         width: RightMenuWidth,
-        height: 58
+        height: 84
       })
 
       vm.rightMenu = {
+        name: item.shortName,
         showClass: position.atLeft ? 'showInfoLeft' : 'showInfoRight',
         left: position.left,
         right: position.right,
@@ -175,52 +175,12 @@ function hideMenu() {
 
 
 /**
- * 显示扩展名称
- */
-function showName(item) {
-  hideName()
-  if(Storage.get('_switch_show_extname_') !== 'close'){
-    vm.extName.content = item.shortName
-    setTimeout(() => {
-      let ele = document.querySelector('#extName')
-      item.showMaxWidth = Math.max(RightMenuWidth, ele.offsetWidth)
-
-      let position = getPositionByExt(item, {
-        width: ele.offsetWidth,
-        height: ele.offsetHeight
-      })
-
-      vm.extName = {
-        showClass: position.atLeft ? 'showInfoLeft' : 'showInfoRight',
-        left: position.left,
-        right: position.right,
-        top: position.top,
-        backgroundColor: item.showColor[item.showMark],
-        content: item.name,
-        adviseMaxWidth: position.adviseMaxWidth
-      }
-    }, 0)
-  }
-}
-function hideName() {
-  vm.extName = {
-    show: false,
-    left: 0,
-    right: 'unset',
-    top: 0,
-    content: ''
-  }
-}
-
-
-/**
  * 初始化页面所有的操作
  */
 function resetHandle(params) {
 
   // 关闭右键菜单
   hideMenu()
-  hideName()
 
   // 关闭Hover
   vm.$data.ext.extList.forEach(item => {
@@ -249,7 +209,7 @@ function enter(item) {
         doing: true,
         listName: item.enabled ? 'showList' : 'hideList'
       }
-      showName(item)
+      showMenu(item)
     }, 200)
   }
 }
@@ -358,7 +318,6 @@ export {
   showMenu,
   enter,
   leave,
-  showName,
   search,
   onoff,
   clear,

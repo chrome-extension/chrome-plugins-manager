@@ -37,12 +37,17 @@
       </span>
     </div>
 
-    <label id="extName" :class="[extName.showClass]" :style="{ left: extName.left, right: extName.right, top: extName.top, background: extName.backgroundColor, 'max-width': extName.adviseMaxWidth + 'px'}">
+    <!-- <label id="extName" :class="[extName.showClass]" :style="{ left: extName.left, right: extName.right, top: extName.top, background: extName.backgroundColor, 'max-width': extName.adviseMaxWidth + 'px'}">
       {{extName.content}}
-    </label>
-    <div id="rightMenu" :class="[rightMenu.showClass]" :style="{ left: rightMenu.left, right: rightMenu.right, top: rightMenu.top, background: rightMenu.backgroundColor}">
+    </label> -->
+    <div id="rightMenu" :class="[rightMenu.showClass]" :style="{ left: rightMenu.left, right: rightMenu.right, top: rightMenu.top}">
+      <div class="name" :style="{ background: rightMenu.backgroundColor }">
+        {{rightMenu.name}}
+      </div>
       <ul>
-        <li v-for="(item, index) in rightMenu.content" @click="item.handle" :disabled="item.disabled" :key="index">{{item.name}}</li>
+        <li v-for="(item, index) in rightMenu.content" @click="item.handle" :disabled="item.disabled" :key="index" :style="{ background: rightMenu.backgroundColor }">
+          <span>{{item.name}}</span>
+        </li>
       </ul>
     </div>
     <canvas id="getColorByCanvas" style="display: none;"></canvas>
@@ -70,6 +75,7 @@ export default {
         allEmpty: false
       },
       rightMenu: {
+        name: '',
         showClass: '',
         left: 0,
         top: 0,
@@ -153,10 +159,6 @@ export default {
     },
     clear() {
       Util.clear()
-    },
-    // 显示右键菜单
-    extRClick(item) {
-      Util.showMenu(item)
     },
     extEnter(item) {
       Util.enter(item)
@@ -632,8 +634,8 @@ export default {
     left: 0;
     z-index: 6;
 
-    height: 58px;
-    width: 150px;
+    height: 84px;
+    width: 190px;
     border-radius: 4px;
     overflow: hidden;
 
@@ -641,18 +643,31 @@ export default {
     background-color: #efefef;
 
     -webkit-transition: .2s ease-in-out;
-    transition: .2s ease-in-out;
+    transition: .2 ease-in-out;
   }
   [data-lan=ru] #rightMenu{
     width: 210px;
   }
+  #rightMenu .name{
+    height: 30px;
+    line-height: 30px;
+    text-align: center;
+    opacity: .8;
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 13px;
+    padding: 0 10px;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    text-shadow: 0 0 2px rgba(0, 0, 0, 0.3);
+    font-weight: bold;
+  }
   #rightMenu ul{
     width: 100%;
-    height: 100%;
   }
   #rightMenu ul li{
-    height: 29px;
-    line-height: 29px;
+    height: 27px;
+    line-height: 27px;
     width: 50%;
     float: left;
 
@@ -660,17 +675,25 @@ export default {
     color: #fff;
     text-align: center;
     list-style: none;
-    cursor: default;
-    box-shadow: inset 0px 0px 0px 0.1px #fff;
+    cursor: pointer;
   }
-  #rightMenu ul li:hover{
-    background-color: red;
+  #rightMenu ul li:nth-child(1){
+    opacity: .88;
+  }
+  #rightMenu ul li:nth-child(2){
+    opacity: .92;
+  }
+  #rightMenu ul li:nth-child(3){
+    opacity: .96;
+  }
+  #rightMenu ul li:not([disabled]):hover{
+    /* background: rgba(255, 0, 0, .8) !important;
+    opacity: 1 !important; */
+    opacity: .7 !important;
   }
   #rightMenu ul li[disabled]{
-    opacity: .4;
-  }
-  #rightMenu ul li[disabled]:hover{
-    background: none;
+    color: rgba(255, 255, 255, 0.3);
+    cursor: default;
   }
 
   .showInfoRight{
