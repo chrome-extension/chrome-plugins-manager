@@ -86,13 +86,10 @@
 
     -webkit-transition: .2s ease-in-out;
     transition: .2s ease-in-out;
-
-    /* -webkit-transform: translateZ(0);
-    transform: translateZ(0); */
   }
   .ext-list li.hover {
-    transform: scale(1.3);
-    -webkit-transform: scale(1.3);
+    transform: scale(1.3) translate3d(0, 0, 0);
+    -webkit-transform: scale(1.3) translate3d(0, 0, 0);
   }
 
   /* 是否应用或开发版 */
