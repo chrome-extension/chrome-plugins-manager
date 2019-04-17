@@ -10,7 +10,6 @@
       :title="showNativeTitle && item.name"
       :mark="item.showMark"
       @mousedown.left.prevent="extClick(item)"
-      @mousedown.right.prevent="extRClick(item)"
       @mouseenter="extEnter(item)"
       @mouseleave="extLeave(item)"
       >
@@ -56,9 +55,6 @@
     methods: {
       extClick(item) {
         this.$parent.extClick && this.$parent.extClick(item)
-      },
-      extRClick(item) {
-        this.$parent.extRClick && this.$parent.extRClick(item)
       },
       extEnter(item) {
         this.$parent.extEnter && this.$parent.extEnter(item)
