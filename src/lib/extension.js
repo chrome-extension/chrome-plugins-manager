@@ -220,14 +220,14 @@ function addIconBadge(){
     if(badgeList.length === 0){
       // 关闭清理动画
       if (window.vm) {
-        window.vm.$data.ext.iconBadgeAnim = false
+        window.vm.ext.iconBadgeAnim = false
       }
       chrome.browserAction.setBadgeText({text: ''})
       return false
     }else{
       // 显示清理动画
       if (window.vm) {
-        window.vm.$data.ext.iconBadgeAnim = true
+        window.vm.ext.iconBadgeAnim = true
       }
       chrome.browserAction.setBadgeBackgroundColor({color: '#f44336'})
       chrome.browserAction.setBadgeText({text: badgeList.length.toString()})
@@ -275,7 +275,7 @@ function lock(item) {
   item.isLocked = true
 
   let group = Storage.get(LockKey)
-  group.list[vm.$data.groupIndex].lock[item.id] = 1
+  group.list[vm.groupIndex].lock[item.id] = 1
   Storage.set(LockKey, group)
 }
 // 解锁
@@ -283,7 +283,7 @@ function unlock(item) {
   item.isLocked = false
 
   let group = Storage.get(LockKey)
-  delete group.list[vm.$data.groupIndex].lock[item.id]
+  delete group.list[vm.groupIndex].lock[item.id]
   Storage.set(LockKey, group)
 }
 

@@ -183,11 +183,11 @@ function resetHandle(params) {
   hideMenu()
 
   // 关闭Hover
-  vm.$data.ext.extList.forEach(item => {
+  vm.ext.extList.forEach(item => {
     item.isHover = false
     clearTimeout(item['hoverTimer'])
   })
-  vm.$data.hover = {
+  vm.hover = {
     doing: false,
     listName: ''
   }
@@ -205,7 +205,7 @@ function enter(item) {
     resetHandle()
     item['hoverTimer'] = setTimeout(() => {
       item.isHover = true
-      vm.$data.hover = {
+      vm.hover = {
         doing: true,
         listName: item.enabled ? 'showList' : 'hideList'
       }
@@ -216,7 +216,7 @@ function enter(item) {
 // 离开
 function leave(item) {
   // eslint-disable-next-line no-empty
-  if (vm.$data.rightMenu.showClass.trim()) {
+  if (vm.rightMenu.showClass.trim()) {
 
   } else {
     if (item['hoverTimer']) {
