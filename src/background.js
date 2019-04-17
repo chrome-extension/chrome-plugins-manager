@@ -4,7 +4,7 @@ import * as Common from './lib/common'
 import * as Storage from './lib/storage'
 
 // 实时运行数据
-window.data = {
+window.backgroundData = {
   i18n: getI18n(),
   language: chrome.i18n.getUILanguage(),
   chromeStore: `https://chrome.google.com/webstore/category/extensions?hl=${chrome.i18n.getUILanguage()}`,
@@ -32,15 +32,15 @@ function init() {
     /**
      * 获取 Storage 存储数据
      */
-    data.storage = await Storage.getAll()
+    backgroundData.storage = await Storage.getAll()
 
     
     /**
      * 界面显示初始化：图标大小、宽度等
      */
-    data.showWindowSize = Common.WindowSizeByColum[Storage.get('_showColumn_') || Common.WindowSizeDefaultColum]
-    data.showIconSize = Storage.get('_showIconSize_') || Common.ShowIconSize
-    data.sortType = Storage.get('_radio_ext_sort_') || Common.SortDefaultType
+    backgroundData.showWindowSize = Common.WindowSizeByColum[Storage.get('_showColumn_') || Common.WindowSizeDefaultColum]
+    backgroundData.showIconSize = Storage.get('_showIconSize_') || Common.ShowIconSize
+    backgroundData.sortType = Storage.get('_radio_ext_sort_') || Common.SortDefaultType
 
     /**
      * 分组处理
@@ -51,7 +51,7 @@ function init() {
       _group = {
         list: [
           {
-            'name': data.i18n.defaultGroupName,
+            'name': backgroundData.i18n.defaultGroupName,
             'lock': _oldLockObj || {}
           }
         ]
@@ -59,42 +59,42 @@ function init() {
       Storage.set('_group_', _group)
       Storage.remove('_lockList_')
     }
-    data.group = _group
-    data.groupIndex = Number.parseInt(localStorage.getItem("_groupIndex_")) || 0
+    backgroundData.group = _group
+    backgroundData.groupIndex = Number.parseInt(localStorage.getItem("_groupIndex_")) || 0
 
     
     /**
      * 扩展排序方法初始化
      */
-    // let _orderHandleByExtension = Extension.orderHandle(data.storage)
+    // let _orderHandleByExtension = Extension.orderHandle(backgroundData.storage)
 
 
     /**
      * 扩展数据处理
      */
-    data.ext.extList = await getAllExtension({ needColor: true })
-    if (data.ext.extList && data.ext.extList.length === 0) {
-      data.ext.allEmpty = true
+    backgroundData.ext.extList = await getAllExtension({ needColor: true })
+    if (backgroundData.ext.extList && backgroundData.ext.extList.length === 0) {
+      backgroundData.ext.allEmpty = true
     } else {
       // 启用&禁用，排序处理
-      data.ext.extList.forEach(item => {
-        if (data.group.list[data.groupIndex].lock[item.id]) {
+      backgroundData.ext.extList.forEach(item => {
+        if (backgroundData.group.list[backgroundData.groupIndex].lock[item.id]) {
           item.isLocked = true
         } else {
           item.isLocked = false
         }
         // if (item.enabled) {
-        //   data.ext.enbledExtList.push(item)
+        //   backgroundData.ext.enbledExtList.push(item)
         // } else {
-        //   data.ext.disabledExtList.push(item)
+        //   backgroundData.ext.disabledExtList.push(item)
         // }
       })
-      // data.ext.enbledExtList = data.ext.enbledExtList.sort(_orderHandleByExtension)
-      // data.ext.disabledExtList = data.ext.disabledExtList.sort(_orderHandleByExtension)
+      // backgroundData.ext.enbledExtList = backgroundData.ext.enbledExtList.sort(_orderHandleByExtension)
+      // backgroundData.ext.disabledExtList = backgroundData.ext.disabledExtList.sort(_orderHandleByExtension)
     }
 
     // 判断角标显示
-    data.ext.iconBadgeAnim = addIconBadgeExtension()
+    backgroundData.ext.iconBadgeAnim = addIconBadgeExtension()
   }, 300)
 }
 init()
@@ -105,7 +105,7 @@ init()
  */
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   if (request.command == 'getBackgroundData'){
-    sendResponse(data)
+    sendResponse(backgroundData)
     request = null
     sender = null
     sendResponse = null
