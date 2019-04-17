@@ -108,9 +108,17 @@ function showMenu(item) {
         handle: () => {
           hideMenu()
           if (item.optionsUrl) {
-            chrome.tabs.create({
-              'url': item.optionsUrl
-            })
+            if (!item.enabled) {
+              Extension.onoff(item, () => {
+                chrome.tabs.create({
+                  'url': item.optionsUrl
+                })
+              })
+            } else {
+              chrome.tabs.create({
+                'url': item.optionsUrl
+              })
+            }
           }
         },
         disabled: !item.optionsUrl
@@ -140,7 +148,13 @@ function showMenu(item) {
           name: vm.i18n.rightAppLaunch,
           handle: () => {
             hideMenu()
-            chrome.management.launchApp(item.id, function(){})
+            if (!item.enabled) {
+              Extension.onoff(item, () => {
+                chrome.management.launchApp(item.id)
+              })
+            } else {
+              chrome.management.launchApp(item.id)
+            }
           },
           disabled: false
         })

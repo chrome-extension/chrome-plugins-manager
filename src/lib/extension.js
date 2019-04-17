@@ -258,13 +258,15 @@ function getAll(option = {}) {
 /**
  * 启用或禁用扩展
  */
-function onoff(item) {
+function onoff(item, callback) {
   // 更新对象状态属性
   item.enabled = !item.enabled
   // 重置Hover
   item.isHover = false
   // 同步至浏览器
-  chrome.management.setEnabled(item.id, item.enabled)
+  chrome.management.setEnabled(item.id, item.enabled, () => {
+    callback && callback()
+  })
 }
 
 
