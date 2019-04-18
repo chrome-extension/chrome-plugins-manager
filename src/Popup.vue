@@ -179,10 +179,6 @@ export default {
     }
   },
   beforeCreate() {
-    
-    // 对象外置，用于调试
-    window.vm = this
-
     chrome.runtime.sendMessage({ command: 'getBackgroundData' }, (data) => {
       let _data = data
 

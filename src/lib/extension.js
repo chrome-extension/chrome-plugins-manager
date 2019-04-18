@@ -11,6 +11,8 @@ const ExtDefaultColor = '#5c5e6f'
 
 // 储存扩展列表
 let allExtList = []
+// Vue 实例
+let vm = null
 
 
 /**
@@ -219,15 +221,15 @@ function addIconBadge(){
 
     if(badgeList.length === 0){
       // 关闭清理动画
-      if (window.vm) {
-        window.vm.ext.iconBadgeAnim = false
+      if (vm) {
+        vm.ext.iconBadgeAnim = false
       }
       chrome.browserAction.setBadgeText({text: ''})
       return false
     }else{
       // 显示清理动画
-      if (window.vm) {
-        window.vm.ext.iconBadgeAnim = true
+      if (vm) {
+        vm.ext.iconBadgeAnim = true
       }
       chrome.browserAction.setBadgeBackgroundColor({color: '#f44336'})
       chrome.browserAction.setBadgeText({text: badgeList.length.toString()})
@@ -317,7 +319,8 @@ function clear() {
 }
 
 
-function init(data) {
+function init(vm, data) {
+  vm = vm
   allExtList = data
 }
 

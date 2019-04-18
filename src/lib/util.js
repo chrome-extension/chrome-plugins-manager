@@ -1,5 +1,4 @@
 import * as Extension from './extension'
-import * as Storage from './storage'
 
 // 右键菜单宽度
 const RightMenuWidth = chrome.i18n.getUILanguage() === 'ru' ? 210 : 190

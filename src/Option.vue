@@ -259,12 +259,12 @@ export default {
       return function(text, timenum = 1500) {
         if (text) {
           clearTimeout(timer)
-          window.vm.tips.show = true
-          window.vm.tips.content = text
+          this.tips.show = true
+          this.tips.content = text
           timer = setTimeout(function() {
-            window.vm.tips.show = false
+            this.tips.show = false
             setTimeout(() => {
-              window.vm.tips.content = ""
+              this.tips.content = ""
             }, 100)
           }, timenum)
         }
@@ -274,8 +274,6 @@ export default {
 
   // 初始化
   beforeMount() {
-    window.vm = this
-
     chrome.runtime.sendMessage({ command: 'getBackgroundData' }, (data) => {
       let _data = data
 
@@ -283,7 +281,7 @@ export default {
       Storage.init(_data.storage)
 
       // 初始化扩展数据
-      Extension.init(_data.ext.extList)
+      Extension.init(this, _data.ext.extList)
 
       // 初始化排序数据
       this.sortType = _data.sortType
