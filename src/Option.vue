@@ -294,8 +294,8 @@ export default {
       this.showWindowSize = Storage.get('_showColumn_') || Common.WindowSizeDefaultColum
       this.showIconSize = _data.showIconSize
 
-      this.group = _data.group
-      this.groupIndex = _data.groupIndex
+      // 初始化分组
+      Storage.initGroup(this)
 
       // 设置标题
       document.title = `${this.i18n["optionName"]} - ${this.i18n["extName"]}`;

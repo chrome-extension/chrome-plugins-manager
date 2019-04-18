@@ -54,8 +54,8 @@
 
 <script>
 import ExtItem from "./components/ExtItem"
-import { init as initStorage } from './lib/storage'
 import { init as initExtension } from "./lib/extension"
+import * as Storage from './lib/storage'
 import * as Util from "./lib/util"
 import * as Rank from "./lib/rank"
 
@@ -183,7 +183,7 @@ export default {
       let _data = data
 
       // 初始化前台Storage数据
-      initStorage(_data.storage) && delete _data.storage
+      Storage.init(_data.storage)
 
       // 初始化扩展数据
       initExtension(this, _data.ext.extList)
@@ -196,8 +196,9 @@ export default {
       this.ext.iconBadgeAnim = _data.ext.iconBadgeAnim
       this.showWindowSize = _data.showWindowSize
       this.showIconSize = _data.showIconSize
-      this.group = _data.group
-      this.groupIndex = _data.groupIndex
+
+      // 初始化分组
+      Storage.initGroup(this)
     });
 
     // 初始化相关

@@ -42,27 +42,7 @@ function init() {
     backgroundData.showIconSize = Storage.get('_showIconSize_') || Common.ShowIconSize
     backgroundData.sortType = Storage.get('_radio_ext_sort_') || Common.SortDefaultType
 
-    /**
-     * 分组处理
-     */
-    let _oldLockObj = Storage.get('_lockList_')
-    let _group = Storage.get('_group_')
-    if (!_group) {
-      _group = {
-        list: [
-          {
-            'name': backgroundData.i18n.defaultGroupName,
-            'lock': _oldLockObj || {}
-          }
-        ]
-      }
-      Storage.set('_group_', _group)
-      Storage.remove('_lockList_')
-    }
-    backgroundData.group = _group
-    backgroundData.groupIndex = Number.parseInt(localStorage.getItem("_groupIndex_")) || 0
 
-    
     /**
      * 扩展排序方法初始化
      */

@@ -38,6 +38,29 @@ function set(key, value) {
 }
 
 
+/**
+ * 分组初始化处理
+ */
+function initGroup(vm) {
+  let _oldLockObj = this.get('_lockList_')
+  let _group = this.get('_group_')
+  if (!_group) {
+    _group = {
+      list: [
+        {
+          'name': vm.i18n.defaultGroupName,
+          'lock': _oldLockObj || {}
+        }
+      ]
+    }
+    this.set('_group_', _group)
+    this.remove('_lockList_')
+  }
+  vm.group = _group
+  vm.groupIndex = Number.parseInt(localStorage.getItem('_groupIndex_')) || 0
+}
+
+
 function init(data) {
   storage = data
 }
@@ -47,5 +70,6 @@ export {
   remove,
   set,
   get,
-  init
+  init,
+  initGroup
 }
