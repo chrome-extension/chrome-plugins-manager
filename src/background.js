@@ -43,6 +43,9 @@ function init() {
     backgroundData.sortType = Storage.get('_radio_ext_sort_') || Common.SortDefaultType
 
 
+    // 初始化分组
+    Storage.initGroup(backgroundData)
+
     /**
      * 扩展排序方法初始化
      */
