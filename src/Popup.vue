@@ -186,7 +186,7 @@ export default {
       initStorage(_data.storage) && delete _data.storage
 
       // 初始化扩展数据
-      initExtension(_data.ext.extList)
+      initExtension(this, _data.ext.extList)
 
       this.i18n = _data.i18n
       this.language = _data.language

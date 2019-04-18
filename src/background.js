@@ -106,9 +106,6 @@ init()
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   if (request.command == 'getBackgroundData'){
     sendResponse(backgroundData)
-    request = null
-    sender = null
-    sendResponse = null
   }
 })
 

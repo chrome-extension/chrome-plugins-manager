@@ -319,8 +319,8 @@ function clear() {
 }
 
 
-function init(vm, data) {
-  vm = vm
+function init(t, data) {
+  vm = t
   allExtList = data
 }
 
