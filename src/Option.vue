@@ -102,12 +102,13 @@
 
 
 <script>
-import getI18n from "./lib/i18n";
-import ExtItem from "./components/ExtItem";
-import SwitchBtn from "./components/SwitchBtn";
-import * as Common from './lib/common.js'
-import * as Storage from "./lib/storage";
-import * as Extension from "./lib/extension";
+import getI18n from './lib/i18n'
+import ExtItem from './components/ExtItem'
+import SwitchBtn from './components/SwitchBtn'
+import { heartDetector } from './lib/util'
+import * as Common from './lib/common'
+import * as Storage from './lib/storage'
+import * as Extension from "./lib/extension"
 
 export default {
   data() {
@@ -300,6 +301,7 @@ export default {
       // 设置标题
       document.title = `${this.i18n["optionName"]} - ${this.i18n["extName"]}`;
     })
+    heartDetector()
   }
 }
 </script>

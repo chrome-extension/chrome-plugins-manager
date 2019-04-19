@@ -86,9 +86,32 @@ init()
 /**
  * 数据传输监听
  */
+let heartDetectorHandle = (() => {
+  let timer = null
+  let counter = null
+  return (newCounter) => {
+    counter = newCounter
+    if (!timer) {
+      timer = setInterval(() => {
+        console.log('== Background 动态检测 ==')
+        if (new Date * 1 > (counter + 5000)) {
+          console.log('== Background 动态检测：超过 3000 ==')
+          clearInterval(timer)
+          counter = null
+          timer = null
+          chrome.runtime.reload()
+        }
+      }, 1000)
+    }
+  }
+})()
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   if (request.command == 'getBackgroundData'){
     sendResponse(backgroundData)
+  } else if(request.command == 'heartDetector') {
+    sendResponse('HeartDetector Over')
+    console.log('== 收到 HeartDetector Info ==')
+    heartDetectorHandle(new Date * 1)
   }
 })
 

@@ -203,6 +203,8 @@ export default {
 
     // 初始化相关
     Util.init(this)
+
+    Util.heartDetector()
   },
   directives: {
     focus: {

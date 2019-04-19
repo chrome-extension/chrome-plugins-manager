@@ -324,6 +324,13 @@ function setGroup() {
 }
 
 
+function heartDetector() {
+  // setInterval(() => {
+  //   chrome.runtime.sendMessage({ command: 'heartDetector' }, (data) => {})
+  // }, 1000)
+}
+
+
 export {
   init,
   showMenu,
@@ -336,5 +343,6 @@ export {
   showGroup,
   hideGroup,
   changeGroup,
-  setGroup
+  setGroup,
+  heartDetector
 }
