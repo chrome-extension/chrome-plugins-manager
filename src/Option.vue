@@ -259,13 +259,14 @@ export default {
       let timer = null
       return function(text, timenum = 1500) {
         if (text) {
+          let t = this
           clearTimeout(timer)
-          this.tips.show = true
-          this.tips.content = text
+          t.tips.show = true
+          t.tips.content = text
           timer = setTimeout(function() {
-            this.tips.show = false
+            t.tips.show = false
             setTimeout(() => {
-              this.tips.content = ""
+              t.tips.content = ""
             }, 100)
           }, timenum)
         }
