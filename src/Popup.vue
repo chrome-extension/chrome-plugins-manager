@@ -55,6 +55,7 @@
 <script>
 import i18n from './lib/i18n'
 import ExtItem from "./components/ExtItem"
+import * as Common from './lib/common'
 import * as Extension from "./lib/extension"
 import * as Storage from './lib/storage'
 import * as Util from "./lib/util"
@@ -96,8 +97,8 @@ export default {
       },
       groupIndex: 0,
       groupShow: false,
-      showIconSize: 2,
-      showWindowSize: 7,
+      showIconSize: Common.ShowIconSize,
+      showWindowSize: Common.WindowSizeDefaultColum,
       orderHandle: function() {}
     }
   },
@@ -146,13 +147,7 @@ export default {
       return list.sort(this.orderHandle)
     },
     getShowWindowSize() {
-      const WindowSizeByColum = {
-        6: 496,
-        7: 572,
-        8: 648,
-        9: 724
-      }
-      return WindowSizeByColum[this.showWindowSize]
+      return Common.WindowSizeByColum[this.showWindowSize || Common.WindowSizeDefaultColum]
     }
   },
   methods: {
