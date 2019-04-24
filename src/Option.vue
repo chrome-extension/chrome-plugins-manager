@@ -105,7 +105,6 @@
 import getI18n from './lib/i18n'
 import ExtItem from './components/ExtItem'
 import SwitchBtn from './components/SwitchBtn'
-import { heartDetector } from './lib/util'
 import * as Common from './lib/common'
 import * as Storage from './lib/storage'
 import * as Extension from "./lib/extension"
@@ -143,6 +142,14 @@ export default {
     'group.list': function(val, oldVal){
       Storage.set('_group_', this.group)
     }
+    // extList: {
+    //   handler: (_new, _old) => {
+    //     setTimeout(() => {
+    //       Extension.addIconBadge()
+    //     }, 0)
+    //   },
+    //   deep: true
+    // }
   },
   computed: {
     otherDesc() {
@@ -275,34 +282,26 @@ export default {
   },
 
   // 初始化
-  beforeMount() {
-    chrome.runtime.sendMessage({ command: 'getBackgroundData' }, (data) => {
-      let _data = data
+  async beforeMount() {
+    window._vm = this
 
-      // 初始化前台Storage数据
-      Storage.init(_data.storage)
+    let _storage = await Storage.getAll(this)
+    let _allExt = await Extension.getAll(this)
 
-      // 初始化扩展数据
-      Extension.init(this, _data.ext.extList)
+    // 显示初始化：图标大小、宽度等
+    let showWindowSize = Storage.get('_showColumn_')
+    if (showWindowSize) {
+      this.showWindowSize = showWindowSize
+    }
+    let showIconSize = Storage.get('_showIconSize_')
+    if (showIconSize) {
+      this.showIconSize = showIconSize
+    }
 
-      // 初始化排序数据
-      this.sortType = _data.sortType
-
-      this.i18n = _data.i18n
-      this.language = _data.language
-      
-      this.extList = _data.ext.extList
-      
-      this.showWindowSize = Storage.get('_showColumn_') || Common.WindowSizeDefaultColum
-      this.showIconSize = _data.showIconSize
-
-      // 初始化分组
-      Storage.initGroup(this)
-
-      // 设置标题
-      document.title = `${this.i18n["optionName"]} - ${this.i18n["extName"]}`;
-    })
-    heartDetector()
+    // 增加分组功能，兼容老版本问题
+    Storage.initGroup(this)
+    
+    this.extList = _allExt
   }
 }
 </script>

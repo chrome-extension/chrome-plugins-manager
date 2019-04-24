@@ -163,7 +163,7 @@ function orderHandle(storage) {
  * 排除扩展，管理器本身以及主题、皮肤等
  * @param {*} all
  */
-function processHandle(all, option) {
+function processHandle(all) {
   let res = new Promise((resolve, reject) => {
 
     // 当前扩展管理器信息
@@ -195,6 +195,18 @@ function processHandle(all, option) {
         // 是否被搜索关键词命中
         item.isSearched = false
 
+        item['showBase64'] = {
+          'original': null,
+          'filter': null,
+          'dinginess': null
+        }
+        item['showColor'] = {
+          'original': '#f9f9f9',
+          'filter': '#f9f9f9',
+          'dinginess': '#f9f9f9'
+        }
+        item['showMark'] = 'original'
+
         // 处理扩展的图标、平均颜色等
         getExtColor(item)
 
@@ -221,14 +233,14 @@ function addIconBadge(){
 
     if(badgeList.length === 0){
       // 关闭清理动画
-      if (vm) {
+      if (vm && vm.ext) {
         vm.ext.iconBadgeAnim = false
       }
       chrome.browserAction.setBadgeText({text: ''})
       return false
     }else{
       // 显示清理动画
-      if (vm) {
+      if (vm && vm.ext) {
         vm.ext.iconBadgeAnim = true
       }
       chrome.browserAction.setBadgeBackgroundColor({color: '#f44336'})
@@ -246,11 +258,12 @@ function addIconBadge(){
  * 获取所有安装的扩展
  * 异步操作，支持Promise
  */
-function getAll(option = {}) {
+function getAll(ins) {
+  vm = ins
   let res = new Promise((resolve, reject) => {
     allExtList = []
     chrome.management.getAll(function(obj){
-      resolve(processHandle(obj, option))
+      resolve(processHandle(obj))
     })
   })
   return res

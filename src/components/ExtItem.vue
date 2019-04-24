@@ -34,7 +34,6 @@
         return function (item) {
           if (this.from === 'option') {
             item['showMark'] = item.isLocked ? 'original' : 'filter'
-            return `background-image:url('${item['showBase64'][item['showMark']]}');`
           } else {
             if (this.searching) {
               item['showMark'] = item.isSearched ? 'original' : 'dinginess'
@@ -45,7 +44,11 @@
                 item['showMark'] = item.enabled ? 'original' : 'filter'
               }
             }
+          }
+          if (item['showBase64'] && item['showBase64'][item['showMark']]){
             return `background-image:url('${item['showBase64'][item['showMark']]}');`
+          } else {
+            return 'background-color: #f9f9f9;'
           }
         }
       }

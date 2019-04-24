@@ -6,10 +6,14 @@ let storage = null
  */
 function getAll() {
   let res = new Promise((resolve, reject) => {
-    chrome.storage.sync.get(function(obj) {
-      storage = obj
+    if (storage) {
       resolve(storage)
-    })
+    } else {
+      chrome.storage.sync.get(function(obj) {
+        storage = obj
+        resolve(storage)
+      })
+    }
   })
   return res
 }
@@ -61,15 +65,10 @@ function initGroup(vm) {
 }
 
 
-function init(data) {
-  storage = data
-}
-
 export {
   getAll,
   remove,
   set,
   get,
-  init,
   initGroup
 }

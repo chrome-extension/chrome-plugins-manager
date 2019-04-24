@@ -1,5 +1,5 @@
 <template>
-  <div id="popup" :data-lan="language" :class="'icon-size-' + showIconSize" :style="'width:' + showWindowSize + 'px'">
+  <div id="popup" :data-lan="language" :class="'icon-size-' + showIconSize" :style="'width:' + getShowWindowSize + 'px'">
     <div id="wrap" :searching="searcher.doing" v-if="ext.extList.length > 0">
       <div id="search">
         <div id="searchBox">
@@ -53,8 +53,9 @@
 
 
 <script>
+import i18n from './lib/i18n'
 import ExtItem from "./components/ExtItem"
-import { init as initExtension } from "./lib/extension"
+import * as Extension from "./lib/extension"
 import * as Storage from './lib/storage'
 import * as Util from "./lib/util"
 import * as Rank from "./lib/rank"
@@ -63,7 +64,7 @@ export default {
   data() {
     return {
       // 国际化对象
-      i18n: {},
+      i18n: i18n(),
       chromeStore: '',
       language: '',
       ext: {
@@ -96,13 +97,22 @@ export default {
       groupIndex: 0,
       groupShow: false,
       showIconSize: 2,
-      showWindowSize: 572,
+      showWindowSize: 7,
       orderHandle: function() {}
     }
   },
   watch: {
     groupIndex: (val, oldVal) => {
       localStorage.setItem("_groupIndex_", val)
+    },
+    'ext.extList': {
+      handler: (_new, _old) => {
+        // console.log('列表变化！！', _new, _old)
+        setTimeout(() => {
+          Extension.addIconBadge()
+        }, 0)
+      },
+      deep: true
     }
   },
   components: {
@@ -134,6 +144,15 @@ export default {
         }
       })
       return list.sort(this.orderHandle)
+    },
+    getShowWindowSize() {
+      const WindowSizeByColum = {
+        6: 496,
+        7: 572,
+        8: 648,
+        9: 724
+      }
+      return WindowSizeByColum[this.showWindowSize]
     }
   },
   methods: {
@@ -178,33 +197,35 @@ export default {
       })
     }
   },
-  beforeCreate() {
-    chrome.runtime.sendMessage({ command: 'getBackgroundData' }, (data) => {
-      let _data = data
+  async beforeCreate() {
 
-      // 初始化前台Storage数据
-      Storage.init(_data.storage)
+    let _storage = await Storage.getAll(this)
+    let _allExt = await Extension.getAll(this)
 
-      // 初始化扩展数据
-      initExtension(this, _data.ext.extList)
+    // 显示初始化：图标大小、宽度等
+    let showWindowSize = Storage.get('_showColumn_')
+    if (showWindowSize) {
+      this.showWindowSize = showWindowSize
+    }
+    let showIconSize = Storage.get('_showIconSize_')
+    if (showIconSize) {
+      this.showIconSize = showIconSize
+    }
 
-      this.i18n = _data.i18n
-      this.language = _data.language
-      this.chromeStore = _data.chromeStore
-      this.ext.extList = _data.ext.extList
-      this.ext.allEmpty = _data.ext.allEmpty
-      this.ext.iconBadgeAnim = _data.ext.iconBadgeAnim
-      this.showWindowSize = _data.showWindowSize
-      this.showIconSize = _data.showIconSize
+    // 增加分组功能，兼容老版本问题
+    Storage.initGroup(this)
 
-      // 初始化分组
-      Storage.initGroup(this)
-    });
+    // 排序方法初始化
+    this.orderHandle = Extension.orderHandle(_storage)
+    
+    if (_allExt && _allExt.length === 0) {
+      this.ext.allEmpty = true
+    } else {
+      this.ext.extList = _allExt
+    }
 
     // 初始化相关
     Util.init(this)
-
-    Util.heartDetector()
   },
   directives: {
     focus: {

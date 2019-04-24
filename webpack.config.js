@@ -12,8 +12,7 @@ module.exports = {
   mode: process.env.NODE_ENV,
   entry: {
     popup: './src/popup.js',
-    option: './src/option.js',
-    background: './src/background.js'
+    option: './src/option.js'
   },
   output: {
     path: path.resolve(__dirname, './dist'),
@@ -115,11 +114,6 @@ if (process.env.NODE_ENV === 'production') {
       {
         from: path.resolve(__dirname, 'src/option.html'),
         to: path.resolve(__dirname, 'dist/option.html'),
-        ignore: ['.*']
-      },
-      {
-        from: path.resolve(__dirname, 'src/background.js'),
-        to: path.resolve(__dirname, 'dist/background.js'),
         ignore: ['.*']
       }
     ])
