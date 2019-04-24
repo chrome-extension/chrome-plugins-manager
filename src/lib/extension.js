@@ -207,10 +207,12 @@ function processHandle(all) {
         }
         item['showMark'] = 'original'
 
-        // 处理扩展的图标、平均颜色等
-        getExtColor(item)
-
         allExtList.push(item)
+
+        setTimeout(() => {
+          // 处理扩展的图标、平均颜色等
+          getExtColor(item)
+        }, 0)
       }
     })
 
