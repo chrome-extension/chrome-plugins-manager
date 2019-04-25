@@ -32,23 +32,33 @@
     computed: {
       getStyle: function(){
         return function (item) {
-          if (this.from === 'option') {
-            item['showMark'] = item.isLocked ? 'original' : 'filter'
-          } else {
-            if (this.searching) {
-              item['showMark'] = item.isSearched ? 'original' : 'dinginess'
+          if (item['showBase64'] && item['showBase64'][item['showMark']]){
+            if (this.from === 'option') {
+              item['showMark'] = item.isLocked ? 'original' : 'filter'
             } else {
-              if (this.hover && this.hover.doing && this.dataId === this.hover.listName) {
-                  item['showMark'] = item.isHover ? 'original' : 'dinginess'
+              if (this.searching) {
+                item['showMark'] = item.isSearched ? 'original' : 'dinginess'
               } else {
-                item['showMark'] = item.enabled ? 'original' : 'filter'
+                if (this.hover && this.hover.doing && this.dataId === this.hover.listName) {
+                    item['showMark'] = item.isHover ? 'original' : 'dinginess'
+                } else {
+                  item['showMark'] = item.enabled ? 'original' : 'filter'
+                }
               }
             }
-          }
-          if (item['showBase64'] && item['showBase64'][item['showMark']]){
+            if(item.id === 'dogkpdfcklifaemcdfbildhcofnopogp'){
+              console.log(`1. background-image:url('${item['showBase64'][item['showMark']]}');`)
+            }
             return `background-image:url('${item['showBase64'][item['showMark']]}');`
           } else {
-            return 'background-color: #f9f9f9;'
+            if (item.enabled) {
+              return `background-image:url('${item['showIcon']}');`
+            } else {
+              if(item.id === 'dogkpdfcklifaemcdfbildhcofnopogp'){
+                console.log(`2. opacity:.5; filter:grayscale(1);background-image:url('${item['showIcon']}');`)
+              }
+              return `opacity:.5; filter:grayscale(1); background-image:url('${item['showIcon']}');`
+            }
           }
         }
       }

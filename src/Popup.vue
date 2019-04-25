@@ -108,7 +108,6 @@ export default {
     },
     'ext.extList': {
       handler: (_new, _old) => {
-        // console.log('列表变化！！', _new, _old)
         setTimeout(() => {
           Extension.addIconBadge()
         }, 0)

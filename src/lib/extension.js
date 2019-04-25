@@ -334,11 +334,6 @@ function clear() {
 }
 
 
-function init(t, data) {
-  vm = t
-  allExtList = data
-}
-
 
 export {
   addIconBadge,
@@ -348,6 +343,5 @@ export {
   unlock,
   uninstall,
   clear,
-  orderHandle,
-  init
+  orderHandle
 }
