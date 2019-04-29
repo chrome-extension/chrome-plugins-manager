@@ -6,6 +6,8 @@ const RightMenuWidth = chrome.i18n.getUILanguage() === 'ru' ? 210 : 190
 // popup页面vue对象
 let vm = null
 
+let hoverTimer = null
+
 
 /**
  * 初始化方法
@@ -85,7 +87,8 @@ function getPositionByExt(item, info) {
  */
 function showMenu(item) {
   hideMenu()
-  clearTimeout(item['hoverTimer'])
+  clearTimeout(hoverTimer)
+  hoverTimer = null
 
   setTimeout(() => {
     // 右键菜单内容
@@ -194,14 +197,16 @@ function resetHandle(params) {
   hideMenu()
 
   // 关闭Hover
+  clearTimeout(hoverTimer)
+  hoverTimer = null
   vm.ext.extList.forEach(item => {
-    item.isHover = false
-    clearTimeout(item['hoverTimer'])
+    if (item.isHover) {
+      item.isHover = false
+    }
   })
-  vm.hover = {
-    doing: false,
-    listName: ''
-  }
+
+  vm.hover.doing = false
+  vm.hover.listName = ''
 }
 
 
@@ -209,18 +214,22 @@ function resetHandle(params) {
  * 进入扩展图标时
  */
 function enter(item) {
+  clearTimeout(hoverTimer)
+  hoverTimer = null
+
   if (!item.isHover) {
     if (vm.searcher.doing && !item.isSearched) {
       return
     }
     resetHandle()
-    item['hoverTimer'] = setTimeout(() => {
+    hoverTimer = setTimeout(() => {
       item.isHover = true
       vm.hover = {
         doing: true,
         listName: item.enabled ? 'showList' : 'hideList'
       }
       showMenu(item)
+      hoverTimer = null
     }, 200)
   }
 }
@@ -230,8 +239,9 @@ function leave(item) {
   if (vm.rightMenu.showClass.trim()) {
 
   } else {
-    if (item['hoverTimer']) {
-      clearTimeout(item['hoverTimer'])
+    if (hoverTimer) {
+      clearTimeout(hoverTimer)
+      hoverTimer = null
     }
     resetHandle()
   }
@@ -272,7 +282,8 @@ function cancelSearch() {
 // 开启关闭扩展
 function onoff(item) {
   // 防止Hover延迟在点击后生效
-  clearTimeout(item['hoverTimer'])
+  clearTimeout(hoverTimer)
+  hoverTimer = null
 
   Extension.onoff(item)
   resetHandle()
