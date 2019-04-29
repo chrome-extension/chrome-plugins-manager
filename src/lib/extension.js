@@ -39,7 +39,7 @@ let setExtColorDefer = (function() {
       clearTimeout(timer)
       timer = null
       temp = []
-    }, 0)
+    }, 30)
   }
 })()
 

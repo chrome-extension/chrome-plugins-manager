@@ -247,7 +247,7 @@ export default {
   }
 
   ::-webkit-scrollbar {
-    width: 1px;
+    width: 0px;
   }
 
   ::-webkit-scrollbar-thumb {
