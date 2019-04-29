@@ -32,13 +32,14 @@ let setExtColorDefer = (function() {
       timer = null
     }
     timer = setTimeout(() => {
+      // console.log('== setExtColorDefer Timer ==')
       temp.forEach(element => {
         element['item'] = Object.assign(element['item'], element['obj'])
       })
       clearTimeout(timer)
       timer = null
       temp = []
-    }, 100)
+    }, 0)
   }
 })()
 
