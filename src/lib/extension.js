@@ -16,6 +16,33 @@ let vm = null
 
 
 /**
+ * 对扩展对象统一进行 “着颜色”
+ * 防止频繁改动数据触发 Watcher
+ */
+let setExtColorDefer = (function() {
+  let timer = null
+  let temp = []
+  return function(item, obj) {
+    temp.push({
+      item,
+      obj
+    })
+    if(timer){
+      clearTimeout(timer)
+      timer = null
+    }
+    timer = setTimeout(() => {
+      temp.forEach(element => {
+        element['item'] = Object.assign(element['item'], element['obj'])
+      })
+      clearTimeout(timer)
+      timer = null
+      temp = []
+    }, 100)
+  }
+})()
+
+/**
  * [getColor 获取扩展图标的平均色值，用于扩展名称显示的底色]
  */
 function getExtColor(item) {
@@ -106,32 +133,34 @@ function getExtColor(item) {
 
   img.onload = function () {
     let imgData = getImageColor(img)
+    let extraObj = {}
     if (imgData.substantial === 1000) {
-      item['showIcon'] = ExtDefaultIcon
-      item['showBase64'] = {
+      extraObj['showIcon'] = ExtDefaultIcon
+      extraObj['showBase64'] = {
         'original': ExtDefaultIcon,
         'filter': ExtDefaultIconFilter,
         'dinginess': ExtDefaultIconDinginess
       }
-      item['showColor'] = {
+      extraObj['showColor'] = {
         'original': ExtDefaultColor,
         'filter': ExtDefaultColor,
         'dinginess': ExtDefaultColor
       }
-      item['showMark'] = 'original'
+      extraObj['showMark'] = 'original'
     } else {
-      item['showBase64'] = {
+      extraObj['showBase64'] = {
         'original': imgData.originalBase64,
         'filter': imgData.filterBase64,
         'dinginess': imgData.dinginessBase64
       }
-      item['showColor'] = {
+      extraObj['showColor'] = {
         'original': imgData.color,
         'filter': '#b1b1b1',
         'dinginess': '#f3f3f3'
       }
-      item['showMark'] = 'original'
+      extraObj['showMark'] = 'original'
     }
+    setExtColorDefer(item, extraObj)
   }
 }
 
