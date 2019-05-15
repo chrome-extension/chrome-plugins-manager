@@ -37,7 +37,7 @@
       </span>
     </div>
 
-    <div id="rightMenu" :class="[rightMenu.showClass]" :style="{ left: rightMenu.left, right: rightMenu.right, top: rightMenu.top}">
+    <div id="rightMenu" :class="[rightMenu.showClass]" :style="{ left: rightMenu.left, right: rightMenu.right, top: rightMenu.top}" @mouseleave="rightMemuLeave">
       <div class="name" :style="{ background: rightMenu.backgroundColor }">
         {{rightMenu.name}}
       </div>
@@ -189,6 +189,9 @@ export default {
       chrome.tabs.create({
         'url': e.target.href
       })
+    },
+    rightMemuLeave() {
+      Util.resetHandle()
     }
   },
   async beforeCreate() {

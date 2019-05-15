@@ -355,5 +355,6 @@ export {
   hideGroup,
   changeGroup,
   setGroup,
-  heartDetector
+  heartDetector,
+  resetHandle
 }
