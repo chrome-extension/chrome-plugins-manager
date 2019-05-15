@@ -19,6 +19,12 @@
             <li @click="setGroup" class="setting"></li>
           </ul>
         </div>
+        <div id="emptyResult" v-show="searcher.empty">
+          <p class="title">{{i18n.searcherEmpty}}</p>
+          <p class="search-webstore">
+            <button class="btn" @click="goChromeStoreSearch">{{i18n.tipsUrl}}</button>
+          </p>
+        </div>
       </div>
       <ext-item :data-list="getEnbledExtList" data-id="showList" data-locked="locked" :searching="searcher.doing" :hover="hover">
         <template slot="empty">
@@ -83,7 +89,8 @@ export default {
       },
       searcher: {
         doing: false,
-        text: ''
+        text: '',
+        empty: false
       },
       hover: {
         doing: false,
@@ -192,6 +199,12 @@ export default {
     },
     rightMemuLeave() {
       Util.resetHandle()
+    },
+    goChromeStoreSearch(e) {
+      e.preventDefault()
+      chrome.tabs.create({
+        'url': `https://chrome.google.com/webstore/search/${encodeURIComponent(this.searcher.text)}`
+      })
     }
   },
   async beforeCreate() {
@@ -345,15 +358,18 @@ export default {
     text-align: center;
     background-color: #f5f5f5;
     padding: 0 12px;
+    outline: none;
   }
   #search .btn:hover{
     color: #fff;
     background-color: #40c4ff;
+    border-color: #25a1d8;
   }
   #search .btn:active{
     transition: none;
     color: #fff;
     background-color: #5c5e6f;
+    border-color: #353640;
   }
   #search .btn-reset{
     width: 50px;
@@ -476,6 +492,38 @@ export default {
   }
   #search #group-list li.setting:hover:before{
     background-image: url('data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PSIwIDAgMTAyNCAxMDI0IiB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHBhdGggZD0iTTk3Ny45MiA0MzMuOTJsLTQ0LjggMGMtMjAuNDggMC00NC44LTE1LjM2LTQ5LjkyLTM1Ljg0bC0yNS42LTY1LjI4Yy0xMC4yNC0yMC40OC01LjEyLTQ0LjggMTAuMjQtNjAuMTZsMzAuNzItMzAuNzJjMTUuMzYtMTUuMzYgMTUuMzYtMzkuNjggMC01NS4wNGwtNTUuMDQtNTUuMDRjLTE1LjM2LTE1LjM2LTM5LjY4LTE1LjM2LTU1LjA0IDBsLTMwLjcyIDMwLjcyYy0xNS4zNiAxNS4zNi0zOS42OCAyMC40OC02MC4xNiAxMC4yNGwtNjUuMjgtMjUuNmMtMjAuNDgtNS4xMi0zNS44NC0zMC43Mi0zNS44NC00OS45Mkw1OTYuNDggNTIuNDhjMC0yNS42LTIwLjQ4LTM5LjY4LTM5LjY4LTM5LjY4bC03NS41MiAwYy0yNS42IDAtMzkuNjggMjAuNDgtMzkuNjggMzkuNjhMNDQxLjYgMTAyLjRjMCAyMC40OC0xNS4zNiA0NC44LTM1Ljg0IDQ5LjkybC02NS4yOCAyNS42Yy0yMC40OCAxMC4yNC00NC44IDUuMTItNjAuMTYtMTAuMjRMMjM4LjA4IDEyOGMtMTUuMzYtMTUuMzYtMzkuNjgtMTUuMzYtNTUuMDQgMGwtNTUuMDQgNTUuMDRjLTE1LjM2IDE1LjM2LTE1LjM2IDM5LjY4IDAgNTUuMDRsMzAuNzIgMzAuNzJjMTUuMzYgMTUuMzYgMjAuNDggMzkuNjggMTAuMjQgNjAuMTZsLTI1LjYgNjUuMjhjLTUuMTIgMjAuNDgtMzAuNzIgMzUuODQtNDkuOTIgMzUuODRMNDYuMDggNDMwLjA4Yy0yNS42IDAtMzkuNjggMjAuNDgtMzkuNjggMzkuNjhsMCA3NS41MmMwIDI1LjYgMjAuNDggMzkuNjggMzkuNjggMzkuNjhsNDQuOCAwYzIwLjQ4IDAgNDQuOCAxNS4zNiA0OS45MiAzNS44NGwyNS42IDY1LjI4YzEwLjI0IDIwLjQ4IDUuMTIgNDQuOC0xMC4yNCA2MC4xNmwtMzAuNzIgMzAuNzJjLTE1LjM2IDE1LjM2LTE1LjM2IDM5LjY4IDAgNTUuMDRsNTUuMDQgNTUuMDRjMTUuMzYgMTUuMzYgMzkuNjggMTUuMzYgNTUuMDQgMGwzMC43Mi0zMC43MmMxNS4zNi0xNS4zNiAzOS42OC0yMC40OCA2MC4xNi0xMC4yNGw2NS4yOCAyNS42YzIwLjQ4IDUuMTIgMzUuODQgMzAuNzIgMzUuODQgNDkuOTJMNDI3LjUyIDk3Mi44YzAgMjUuNiAyMC40OCAzOS42OCAzOS42OCAzOS42OGw3NS41MiAwYzI1LjYgMCAzOS42OC0yMC40OCAzOS42OC0zOS42OGwwLTQ0LjhjMC0yMC40OCAxNS4zNi00NC44IDM1Ljg0LTQ5LjkybDY1LjI4LTI1LjZjMjAuNDgtMTAuMjQgNDQuOC01LjEyIDYwLjE2IDEwLjI0bDMwLjcyIDMwLjcyYzE1LjM2IDE1LjM2IDM5LjY4IDE1LjM2IDU1LjA0IDBsNTUuMDQtNTUuMDRjMTUuMzYtMTUuMzYgMTUuMzYtMzkuNjggMC01NS4wNGwtMzAuNzItMzAuNzJjLTE1LjM2LTE1LjM2LTIwLjQ4LTM5LjY4LTEwLjI0LTYwLjE2bDI1LjYtNjUuMjhjNS4xMi0yMC40OCAzMC43Mi0zNS44NCA0OS45Mi0zNS44NGw0NC44IDBjMjUuNiAwIDM5LjY4LTIwLjQ4IDM5LjY4LTM5LjY4bDEwLjI0IDAgMC03NS41MkMxMDE3LjYgNDQ5LjI4IDk5Ny4xMiA0MzMuOTIgOTc3LjkyIDQzMy45MnpNNTE0LjU2IDcwMS40NGMtMTA0Ljk2IDAtMTkwLjcyLTg1Ljc2LTE5MC43Mi0xOTAuNzJzODUuNzYtMTkwLjcyIDE5MC43Mi0xOTAuNzJjMTA0Ljk2IDAgMTkwLjcyIDg1Ljc2IDE5MC43MiAxOTAuNzJTNjE5LjUyIDcwMS40NCA1MTQuNTYgNzAxLjQ0eiIgZmlsbD0icmdiKDI1NSwgMjU1LCAyNTUpIj48L3BhdGg+PC9zdmc+');
+  }
+
+  #emptyResult{
+    position: absolute;
+    z-index: 99999;
+    top: 100px;
+    left: 50%;
+    transform: translate(-50%, 0);
+
+    width: 70%;
+    padding: 50px 0;
+    background-color: #ffffff;
+    border: 1px solid #d8d8d8;
+    border-radius: 4px;
+    box-shadow: 7px 7px 10px 0px rgba(0, 0, 0, 0.4);
+  }
+  #emptyResult .title{
+    color: #717171;
+    font-size: 26px;
+    text-align: center;
+    line-height: 40px;
+    margin: 0 0 20px 0;
+  }
+  #emptyResult .search-webstore{
+    text-align: center;
+  }
+  #emptyResult .search-webstore button{
+    font-size: 16px;
+    height: 42px;
+    line-height: 42px;
+    padding: 0 16px;
+    border-radius: 4px;
   }
 
   #wrap[searching] #search .searchEmpty{

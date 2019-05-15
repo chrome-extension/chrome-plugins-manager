@@ -116,6 +116,9 @@
 	"searcherPlaceholder": {
 		"message": "あなたの拡張機能を探します"
 	},
+	"searcherEmpty": {
+		"message": "結果がありません"
+	},
 	"defaultGroupName": {
 		"message": "デフォルト"
 	},

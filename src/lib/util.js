@@ -257,14 +257,21 @@ function search() {
     setTimeout(() => {
       vm.searcher.doing = true
       let queryArr = text.split(/\s/)
-      vm.ext.extList.forEach(item => {
+      let searchRes = vm.ext.extList.filter(item => {
         let extInfo = (item.name+item.description).toLowerCase()
         let isSearched = queryArr.some(q => extInfo.includes(q))
         item['isSearched'] = isSearched
-      }, 0)
+        return isSearched
+      })
+      if (searchRes.length === 0) {
+        vm.searcher.empty = true
+      } else {
+        vm.searcher.empty = false
+      }
     })
   } else {
     vm.searcher.doing = false
+    vm.searcher.empty = false
     vm.ext.extList.forEach(item => {
       if (item['isSearched']) {
         item['isSearched'] = false
@@ -275,7 +282,8 @@ function search() {
 function cancelSearch() {
   vm.searcher = {
     doing: false,
-    text: ''
+    text: '',
+    empty: false
   }
 }
 

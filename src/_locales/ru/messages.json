@@ -116,6 +116,9 @@
 	"searcherPlaceholder": {
 		"message": "Найди расширение"
 	},
+	"searcherEmpty": {
+		"message": "Нет результатов"
+	},
 	"defaultGroupName": {
 		"message": "дефолт"
 	},

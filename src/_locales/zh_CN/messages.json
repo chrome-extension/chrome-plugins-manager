@@ -81,7 +81,7 @@
 		"message": "去逛一逛"
 	},
 	"tipsUrl": {
-		"message": "Chrome网上应用店"
+		"message": "Chrome 网上应用店"
 	},
 	"rightLock_unlock": {
 		"message": "解锁"	
@@ -115,6 +115,9 @@
 	},
 	"searcherPlaceholder": {
 		"message": "搜索你的扩展"
+	},
+	"searcherEmpty": {
+		"message": "没有找到相关扩展或应用"
 	},
 	"defaultGroupName": {
 		"message": "默认分组"
