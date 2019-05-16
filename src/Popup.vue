@@ -54,7 +54,7 @@
       </ul>
     </div>
     <canvas id="getColorByCanvas" style="display: none;"></canvas>
-    <div id="support" @click="goSupport" v-show="isSupported"></div>
+    <div id="support" @click="goSupport" v-if="isSupported"></div>
   </div>
 </template>
 
@@ -107,7 +107,7 @@ export default {
       showIconSize: Common.ShowIconSize,
       showWindowSize: Common.WindowSizeDefaultColum,
       orderHandle: function() {},
-      isSupported: true
+      isSupported: false
     }
   },
   watch: {
@@ -234,8 +234,8 @@ export default {
     }
 
     let isSupported = Storage.get('_isSupported_')
-    if (isSupported) {
-      this.isSupported = false
+    if (!isSupported) {
+      this.isSupported = true
     }
 
     // 增加分组功能，兼容老版本问题
