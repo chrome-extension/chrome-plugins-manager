@@ -113,7 +113,7 @@ export default {
     return {
       // 国际化对象
       i18n: getI18n(),
-      language: '',
+      language: chrome.i18n.getUILanguage(),
       extList: [],
       group: {
         list: [

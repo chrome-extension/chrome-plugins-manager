@@ -54,7 +54,7 @@
 		"message": "重置排序"
 	},
 	"otherDesc": {
-		"message": "同時，也可以登陸 <a>Chrome 網上應用店</a> 給予好評 或 提供支持性建議"
+		"message": "同時，也可以登陸 <a>Chrome 線上應用程式商店</a> 給予好評 或 提供支持性建議"
 	},
 	"otherDonate": {
 		"message": "如果您對它還算滿意，可以給予我一點讚賞，激勵我持續免費的完善它 :-)"
@@ -78,7 +78,7 @@
 		"message": "去逛一逛"
 	},
 	"tipsUrl": {
-		"message": "Chrome線上應用程式商店"
+		"message": "Chrome 線上應用程式商店"
 	},
 	"rightLock_unlock": {
 		"message": "解鎖"

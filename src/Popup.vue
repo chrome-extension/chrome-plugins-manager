@@ -73,8 +73,7 @@ export default {
     return {
       // 国际化对象
       i18n: i18n(),
-      chromeStore: '',
-      language: '',
+      language: chrome.i18n.getUILanguage(),
       ext: {
         extList: [],
         iconBadgeAnim: false,
@@ -128,6 +127,9 @@ export default {
     ExtItem
   },
   computed: {
+    chromeStore() {
+      return `https://chrome.google.com/webstore?hl=${this.language}`
+    },
     getEnbledExtList() {
       let list = this.ext.extList.filter(item => {
         if (item.enabled) {
@@ -205,7 +207,7 @@ export default {
     goChromeStoreSearch(e) {
       e.preventDefault()
       chrome.tabs.create({
-        'url': `https://chrome.google.com/webstore/search/${encodeURIComponent(this.searcher.text)}`
+        'url': `https://chrome.google.com/webstore/search/${encodeURIComponent(this.searcher.text)}?hl=${this.language}`
       })
     },
     goSupport(e) {
