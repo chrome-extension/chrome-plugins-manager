@@ -57,10 +57,10 @@
 		"message": "Support:"
 	},
 	"otherDesc": {
-		"message": "You can visit <a>Extension Manager</a> in Chrome Web Store to post a comment to give me a thumb-up or any suggestions"
+		"message": "you can also give a favorable comment or provide support suggestions at the <a>Chrome Web Store</a>."
 	},
 	"otherDonate": {
-		"message": "Also, if you like, you can invite me to have a cup of coffee and motivate me to continually optimize it :-)"
+		"message": "If you are satisfied with it, you can give me a donation and encourage me to continue to improve it for free :-)"
 	},
 	"showBadgeName": {
 		"message": "Show Total Number:"

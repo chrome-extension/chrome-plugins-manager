@@ -77,10 +77,8 @@
     </div>
     
     <!-- 捐赠 -->
-    <div class="list">
+    <div class="list" id="support" name="support">
       <h1>{{i18n.otherName}}</h1>
-      <p class="describe" v-html="otherDesc"></p>
-      <br>
       <p class="describe">{{i18n.otherDonate}}</p>
       <ul id="otherDonateList" class="gclearfix">
         <li>
@@ -95,6 +93,7 @@
           <img src="assets/pay/pay-alipay.png">
         </li>
       </ul>
+      <p class="describe" v-html="otherDesc"></p>
     </div>
     <canvas id="getColorByCanvas" style="display: none;"></canvas>
   </div>
@@ -657,14 +656,14 @@ ul li em {
 }
 
 #otherDonateList {
-  margin: 50px 0 20px 0;
+  margin: 20px 0 30px 0;
 }
 #otherDonateList li {
   list-style: none;
   float: left;
-  width: 200px;
-  height: 250px;
-  margin: 0 60px 0 0;
+  width: 180px;
+  height: 220px;
+  margin: 0 40px 0 0;
   border-radius: 4px;
   overflow: hidden;
 }

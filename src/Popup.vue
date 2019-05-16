@@ -54,6 +54,7 @@
       </ul>
     </div>
     <canvas id="getColorByCanvas" style="display: none;"></canvas>
+    <div id="support" @click="goSupport" v-show="isSupported"></div>
   </div>
 </template>
 
@@ -106,7 +107,8 @@ export default {
       groupShow: false,
       showIconSize: Common.ShowIconSize,
       showWindowSize: Common.WindowSizeDefaultColum,
-      orderHandle: function() {}
+      orderHandle: function() {},
+      isSupported: true
     }
   },
   watch: {
@@ -205,6 +207,13 @@ export default {
       chrome.tabs.create({
         'url': `https://chrome.google.com/webstore/search/${encodeURIComponent(this.searcher.text)}`
       })
+    },
+    goSupport(e) {
+      e.preventDefault()
+      Storage.set('_isSupported_', 1)
+      chrome.tabs.create({
+        'url': `/option.html#support`
+      })
     }
   },
   async beforeCreate() {
@@ -220,6 +229,11 @@ export default {
     let showIconSize = Storage.get('_showIconSize_')
     if (showIconSize) {
       this.showIconSize = showIconSize
+    }
+
+    let isSupported = Storage.get('_isSupported_')
+    if (isSupported) {
+      this.isSupported = false
     }
 
     // 增加分组功能，兼容老版本问题
@@ -775,5 +789,24 @@ export default {
       -webkit-transform: translate3d(0, 0, 0);
       opacity: 1;
     }
+  }
+  #support{
+    position: absolute;
+    right: -1px;
+    bottom: -1px;
+    z-index: 999999;
+
+    width: 24px;
+    height: 24px;
+    cursor: pointer;
+    border-radius: 2px;
+    background-image: url('/assets/icon/support.png');
+    background-repeat: no-repeat;
+    background-size: 66%;
+    background-color: #E0E0E0;
+    background-position: center;
+  }
+  #support:hover{
+    background-color: #FDC946;
   }
 </style>
