@@ -526,10 +526,10 @@ export default {
   }
   #emptyResult .title{
     color: #717171;
-    font-size: 26px;
+    font-size: 24px;
     text-align: center;
     line-height: 40px;
-    margin: 0 0 20px 0;
+    margin: 0 0 15px 0;
   }
   #emptyResult .search-webstore{
     text-align: center;
