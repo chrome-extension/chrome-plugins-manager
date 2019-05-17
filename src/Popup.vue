@@ -3,7 +3,7 @@
     <div id="wrap" :searching="searcher.doing" v-if="ext.extList.length > 0">
       <div id="search">
         <div id="searchBox">
-          <input type="text" class="searchInput searcher" v-model="searcher.text" :placeholder="i18n.searcherPlaceholder" @input="search" v-focus @mouseenter="focus">
+          <input type="text" class="searchInput searcher" v-model="searcher.text" :placeholder="i18n.searcherPlaceholder" @input="search" v-focus @mouseenter="focus" @keydown="searchByChromeStore">
           <svg width="24px" height="24px" class="searchEmpty" viewBox="0 0 24 24" @mousedown="cancelSearch">
             <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path>
           </svg>
@@ -181,6 +181,11 @@ export default {
     search() {
       Util.search()
     },
+    searchByChromeStore(e) {
+      if (e.keyCode === 13) {
+        this.goChromeStoreSearch(e)
+      }
+    },
     cancelSearch() {
       Util.cancelSearch()
     },
@@ -206,9 +211,11 @@ export default {
     },
     goChromeStoreSearch(e) {
       e.preventDefault()
-      chrome.tabs.create({
-        'url': `https://chrome.google.com/webstore/search/${encodeURIComponent(this.searcher.text)}?hl=${this.language}`
-      })
+      if (this.searcher.text.trim()) {
+        chrome.tabs.create({
+          'url': `https://chrome.google.com/webstore/search/${encodeURIComponent(this.searcher.text)}?hl=${this.language}`
+        })
+      }
     },
     goSupport(e) {
       e.preventDefault()
@@ -522,11 +529,11 @@ export default {
     background-color: #ffffff;
     border: 1px solid #d8d8d8;
     border-radius: 4px;
-    box-shadow: 7px 7px 10px 0px rgba(0, 0, 0, 0.4);
+    box-shadow: 8px 8px 5px 0 rgba(0, 0, 0, 0.33);
   }
   #emptyResult .title{
     color: #717171;
-    font-size: 24px;
+    font-size: 23px;
     text-align: center;
     line-height: 40px;
     margin: 0 0 15px 0;
@@ -535,11 +542,12 @@ export default {
     text-align: center;
   }
   #emptyResult .search-webstore button{
-    font-size: 16px;
-    height: 42px;
-    line-height: 42px;
+    font-size: 15px;
+    height: 40px;
+    line-height: 40px;
     padding: 0 16px;
     border-radius: 4px;
+    box-sizing: content-box;
   }
 
   #wrap[searching] #search .searchEmpty{
