@@ -525,7 +525,7 @@ export default {
     transform: translate(-50%, 0);
 
     width: 70%;
-    padding: 50px 0;
+    padding: 30px 0;
     background-color: #ffffff;
     border: 1px solid #d8d8d8;
     border-radius: 4px;
@@ -536,7 +536,7 @@ export default {
     font-size: 23px;
     text-align: center;
     line-height: 40px;
-    margin: 0 0 15px 0;
+    margin: 0 0 10px 0;
   }
   #emptyResult .search-webstore{
     text-align: center;
