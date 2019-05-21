@@ -114,7 +114,7 @@
 		"message": "Reset"
 	},
 	"searcherPlaceholder": {
-		"message": "Search for your extension"
+		"message": "Search extension"
 	},
 	"searcherEmpty": {
 		"message": "No results"

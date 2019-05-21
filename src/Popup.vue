@@ -4,8 +4,11 @@
       <div id="search">
         <div id="searchBox">
           <input type="text" class="searchInput searcher" v-model="searcher.text" :placeholder="i18n.searcherPlaceholder" @input="search" v-focus @mouseenter="focus" @keydown="searchByChromeStore">
-          <svg width="24px" height="24px" class="searchEmpty" viewBox="0 0 24 24" @mousedown="cancelSearch">
+          <svg width="24px" height="24px" class="searchBtn searchEmpty" viewBox="0 0 24 24" @mousedown="cancelSearch">
             <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path>
+          </svg>
+          <svg width="24px" height="24px" class="searchBtn searchEnter" viewBox="-100 -100 1200 1200" @mousedown="enterSearch">
+            <path d="M804.248575 157.915589l0 431.250908L393.361461 589.166497 393.361461 407.414013l-265.620613 227.143277 265.620613 227.01741L393.361461 679.95013l456.278931 0c25.086351 0 45.391816-20.36277 45.391816-45.39284L895.032208 157.915589 804.248575 157.915589 804.248575 157.915589zM804.248575 157.915589"></path>
           </svg>
           <svg width="20px" height="20px" class="serachIco" viewBox="0 0 20 20">
             <path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"></path>
@@ -189,6 +192,9 @@ export default {
     cancelSearch() {
       Util.cancelSearch()
     },
+    enterSearch() {
+      this.goChromeStoreSearch()
+    },
     showGroup() {
       Util.showGroup()
     },
@@ -210,7 +216,7 @@ export default {
       Util.resetHandle()
     },
     goChromeStoreSearch(e) {
-      e.preventDefault()
+      e && e.preventDefault()
       if (this.searcher.text.trim()) {
         chrome.tabs.create({
           'url': `https://chrome.google.com/webstore/search/${encodeURIComponent(this.searcher.text)}?hl=${this.language}`
@@ -352,18 +358,28 @@ export default {
     background: #f5f5f5;
     color: #212121;
   }
-  #search .searchEmpty{
-    fill: #717171;
+  #search .searchBtn{
+    display: none;
     position: absolute;
-    right: 10px;
     top: 50%;
     -webkit-transform: translateY(-50%);
     transform: translateY(-50%);
+    fill: #717171;
     cursor: pointer;
-    display: none;
+    border: 1px solid #e6e6e6;
+    border-radius: 4px;
+    transition: .2s ease-in-out;
   }
-  #search .searchEmpty:active{
-    fill: #000;
+  #search .searchEnter{
+    right: 42px;
+  }
+  #search .searchEmpty{
+    right: 10px;
+  }
+  #search .searchBtn:hover{
+    background-color: #40c4ff;
+    border-color: #40c4ff;
+    fill: #fff;
   }
   #search .serachIco{
     fill: #717171;
@@ -550,7 +566,7 @@ export default {
     box-sizing: content-box;
   }
 
-  #wrap[searching] #search .searchEmpty{
+  #wrap[searching] #search .searchBtn{
     display: block;
   }
 
